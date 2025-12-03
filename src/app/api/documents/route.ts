@@ -178,17 +178,17 @@ export async function POST(request: NextRequest) {
       // Ignore parse errors
     }
 
-    // Validate document data
+    // Validate document data - convert null to undefined for optional fields
     const documentData = {
       title: (formData.get('title') as string) || file.name,
-      description: formData.get('description') as string,
-      documentNumber: formData.get('documentNumber') as string,
-      documentType: formData.get('documentType') as string,
-      direction: formData.get('direction') as string,
-      confidentiality: formData.get('confidentiality') as string,
-      folderId: formData.get('folderId') as string,
+      description: (formData.get('description') as string) || undefined,
+      documentNumber: (formData.get('documentNumber') as string) || undefined,
+      documentType: (formData.get('documentType') as string) || undefined,
+      direction: (formData.get('direction') as string) || undefined,
+      confidentiality: (formData.get('confidentiality') as string) || undefined,
+      folderId: (formData.get('folderId') as string) || undefined,
       tags: formData.getAll('tags') as string[],
-      metadata,
+      metadata: Object.keys(metadata).length > 0 ? metadata : undefined,
     };
 
     const validation = validate(createDocumentSchema, documentData);
