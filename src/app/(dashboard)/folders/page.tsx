@@ -37,6 +37,7 @@ export default function FoldersPage() {
   const [newFolderDescription, setNewFolderDescription] = useState('');
   const [selectedParent, setSelectedParent] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
+  const [error, setError] = useState('');
   const [currentPath, setCurrentPath] = useState<Array<{ id: string; name: string }>>([]);
 
   useEffect(() => {
@@ -71,6 +72,7 @@ export default function FoldersPage() {
     if (!newFolderName.trim()) return;
 
     setCreating(true);
+    setError('');
     try {
       const response = await fetch('/api/folders', {
         method: 'POST',
@@ -82,14 +84,19 @@ export default function FoldersPage() {
         }),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
         setNewFolderName('');
         setNewFolderDescription('');
         setShowCreateForm(false);
         fetchFolders();
+      } else {
+        setError(data.error || 'Failed to create folder');
       }
-    } catch (error) {
-      console.error('Failed to create folder:', error);
+    } catch (err) {
+      console.error('Failed to create folder:', err);
+      setError('Failed to create folder');
     } finally {
       setCreating(false);
     }
@@ -155,6 +162,11 @@ export default function FoldersPage() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleCreateFolder} className="space-y-4">
+              {error && (
+                <div className="bg-red-50 dark:bg-red-900/50 text-red-600 dark:text-red-400 p-3 rounded-md text-sm">
+                  {error}
+                </div>
+              )}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Folder Name
@@ -177,7 +189,7 @@ export default function FoldersPage() {
                 />
               </div>
               <div className="flex justify-end space-x-2">
-                <Button type="button" variant="outline" onClick={() => setShowCreateForm(false)}>
+                <Button type="button" variant="outline" onClick={() => { setShowCreateForm(false); setError(''); }}>
                   Cancel
                 </Button>
                 <Button type="submit" disabled={creating}>

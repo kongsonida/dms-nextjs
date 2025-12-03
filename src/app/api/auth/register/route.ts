@@ -36,12 +36,13 @@ export async function POST(request: NextRequest) {
     // Hash password
     const hashedPassword = await hashPassword(password);
 
-    // Create user
+    // Create user with EDITOR role by default (allows document management)
     const user = await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
         name,
+        role: 'EDITOR',
       },
       select: {
         id: true,
