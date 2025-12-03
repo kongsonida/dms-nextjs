@@ -1,0 +1,673 @@
+// DMS - Document Management System Database Schema
+// Technology: MySQL with Prisma ORM
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ===========================================
+// USER & AUTHENTICATION
+// ===========================================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified DateTime?
+  password      String?
+  name          String?
+  image         String?
+  role          Role      @default(VIEWER)
+  isActive      Boolean   @default(true)
+  storageQuota  BigInt    @default(5368709120) // 5GB default
+  storageUsed   BigInt    @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  accounts      Account[]
+  sessions      Session[]
+  documents     Document[]
+  documentVersions DocumentVersion[]
+  uploads       Upload[]
+  locks         DocumentLock[]
+  checkouts     DocumentCheckout[]
+  auditLogs     AuditLog[]
+  notifications Notification[]
+  assignedWorkflows WorkflowStep[] @relation("AssignedUser")
+  createdWorkflows  Workflow[]
+  comments      Comment[]
+  shares        ShareLink[]
+  webhooks      Webhook[]
+  tags          Tag[]
+
+  @@map("users")
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  EDITOR
+  VIEWER
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ===========================================
+// DOCUMENTS & FILES
+// ===========================================
+
+model Document {
+  id              String            @id @default(cuid())
+  title           String
+  description     String?           @db.Text
+  slug            String            @unique
+  fileName        String
+  originalName    String
+  mimeType        String
+  fileSize        BigInt
+  filePath        String            @db.Text
+  fileHash        String            // SHA-256 hash for integrity
+  thumbnailPath   String?           @db.Text
+
+  // Document metadata
+  documentNumber  String?           // Document in/out number
+  documentType    DocumentType      @default(GENERAL)
+  direction       DocumentDirection @default(INTERNAL)
+  confidentiality ConfidentialLevel @default(INTERNAL)
+
+  // Status
+  status          DocumentStatus    @default(DRAFT)
+  isDeleted       Boolean           @default(false)
+  deletedAt       DateTime?
+
+  // OCR & Search
+  ocrText         String?           @db.LongText
+  ocrStatus       OcrStatus         @default(PENDING)
+  ocrJobId        String?
+  searchVector    String?           @db.LongText  // For full-text search
+
+  // Virus scanning
+  virusScanStatus ScanStatus        @default(PENDING)
+  virusScanResult String?
+  lastScannedAt   DateTime?
+
+  // Retention
+  retentionPolicy String?
+  retentionDate   DateTime?
+
+  // Ownership
+  ownerId         String
+  owner           User              @relation(fields: [ownerId], references: [id])
+  folderId        String?
+  folder          Folder?           @relation(fields: [folderId], references: [id])
+
+  // Timestamps
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  // Relations
+  versions        DocumentVersion[]
+  tags            DocumentTag[]
+  metadata        DocumentMetadata[]
+  locks           DocumentLock[]
+  checkouts       DocumentCheckout[]
+  shares          ShareLink[]
+  workflows       Workflow[]
+  comments        Comment[]
+  auditLogs       AuditLog[]
+
+  @@index([ownerId])
+  @@index([folderId])
+  @@index([status])
+  @@index([createdAt])
+  @@fulltext([title, description])
+  @@map("documents")
+}
+
+enum DocumentType {
+  GENERAL
+  CONTRACT
+  INVOICE
+  REPORT
+  MEMO
+  LETTER
+  POLICY
+  PROCEDURE
+  FORM
+  OTHER
+}
+
+enum DocumentDirection {
+  INCOMING
+  OUTGOING
+  INTERNAL
+}
+
+enum ConfidentialLevel {
+  PUBLIC
+  INTERNAL
+  CONFIDENTIAL
+  RESTRICTED
+}
+
+enum DocumentStatus {
+  DRAFT
+  PENDING_REVIEW
+  APPROVED
+  PUBLISHED
+  ARCHIVED
+  REJECTED
+}
+
+enum OcrStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  SKIPPED
+}
+
+enum ScanStatus {
+  PENDING
+  SCANNING
+  CLEAN
+  INFECTED
+  ERROR
+}
+
+model DocumentVersion {
+  id          String   @id @default(cuid())
+  documentId  String
+  document    Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  version     Int
+  fileName    String
+  filePath    String   @db.Text
+  fileSize    BigInt
+  fileHash    String
+  changeNote  String?  @db.Text
+  createdById String
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdAt   DateTime @default(now())
+
+  @@unique([documentId, version])
+  @@index([documentId])
+  @@map("document_versions")
+}
+
+model DocumentMetadata {
+  id         String   @id @default(cuid())
+  documentId String
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  key        String
+  value      String   @db.Text
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([documentId, key])
+  @@index([documentId])
+  @@map("document_metadata")
+}
+
+// ===========================================
+// FOLDERS & ORGANIZATION
+// ===========================================
+
+model Folder {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?   @db.Text
+  parentId    String?
+  parent      Folder?   @relation("FolderHierarchy", fields: [parentId], references: [id])
+  children    Folder[]  @relation("FolderHierarchy")
+  documents   Document[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Permissions
+  permissions FolderPermission[]
+
+  @@index([parentId])
+  @@map("folders")
+}
+
+model FolderPermission {
+  id       String     @id @default(cuid())
+  folderId String
+  folder   Folder     @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  role     Role
+  canRead  Boolean    @default(true)
+  canWrite Boolean    @default(false)
+  canDelete Boolean   @default(false)
+  canShare Boolean    @default(false)
+
+  @@unique([folderId, role])
+  @@map("folder_permissions")
+}
+
+// ===========================================
+// TAGS & CATEGORIZATION
+// ===========================================
+
+model Tag {
+  id        String        @id @default(cuid())
+  name      String        @unique
+  slug      String        @unique
+  color     String        @default("#6366f1")
+  createdById String
+  createdBy User          @relation(fields: [createdById], references: [id])
+  documents DocumentTag[]
+  createdAt DateTime      @default(now())
+
+  @@map("tags")
+}
+
+model DocumentTag {
+  documentId String
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  tagId      String
+  tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@id([documentId, tagId])
+  @@map("document_tags")
+}
+
+// ===========================================
+// DOCUMENT LOCKING & CHECKOUT
+// ===========================================
+
+model DocumentLock {
+  id         String   @id @default(cuid())
+  documentId String   @unique
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  reason     String?
+  lockedAt   DateTime @default(now())
+  expiresAt  DateTime
+
+  @@index([documentId])
+  @@map("document_locks")
+}
+
+model DocumentCheckout {
+  id          String    @id @default(cuid())
+  documentId  String
+  document    Document  @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  checkedOutAt DateTime @default(now())
+  checkedInAt DateTime?
+  version     Int       // Version at checkout
+  note        String?   @db.Text
+
+  @@index([documentId])
+  @@index([userId])
+  @@map("document_checkouts")
+}
+
+// ===========================================
+// SHARING & ACCESS
+// ===========================================
+
+model ShareLink {
+  id          String    @id @default(cuid())
+  documentId  String
+  document    Document  @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  token       String    @unique
+  password    String?   // Optional password protection
+  expiresAt   DateTime?
+  maxDownloads Int?
+  downloads   Int       @default(0)
+  allowPreview Boolean  @default(true)
+  allowDownload Boolean @default(true)
+  createdById String
+  createdBy   User      @relation(fields: [createdById], references: [id])
+  createdAt   DateTime  @default(now())
+  lastAccessedAt DateTime?
+
+  @@index([documentId])
+  @@index([token])
+  @@map("share_links")
+}
+
+// ===========================================
+// WORKFLOW & ASSIGNMENTS
+// ===========================================
+
+model Workflow {
+  id          String         @id @default(cuid())
+  name        String
+  description String?        @db.Text
+  documentId  String
+  document    Document       @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  status      WorkflowStatus @default(ACTIVE)
+  priority    Priority       @default(MEDIUM)
+  dueDate     DateTime?
+  createdById String
+  createdBy   User           @relation(fields: [createdById], references: [id])
+  steps       WorkflowStep[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  completedAt DateTime?
+
+  @@index([documentId])
+  @@index([status])
+  @@map("workflows")
+}
+
+enum WorkflowStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+  ON_HOLD
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model WorkflowStep {
+  id            String     @id @default(cuid())
+  workflowId    String
+  workflow      Workflow   @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  order         Int
+  name          String
+  description   String?    @db.Text
+  assignedToId  String
+  assignedTo    User       @relation("AssignedUser", fields: [assignedToId], references: [id])
+  status        StepStatus @default(PENDING)
+  action        String?    // REVIEW, APPROVE, SIGN, etc.
+  dueDate       DateTime?
+  completedAt   DateTime?
+  comment       String?    @db.Text
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  @@unique([workflowId, order])
+  @@index([workflowId])
+  @@index([assignedToId])
+  @@map("workflow_steps")
+}
+
+enum StepStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  REJECTED
+  SKIPPED
+}
+
+// ===========================================
+// COMMENTS & DISCUSSIONS
+// ===========================================
+
+model Comment {
+  id         String    @id @default(cuid())
+  documentId String
+  document   Document  @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User      @relation(fields: [userId], references: [id])
+  content    String    @db.Text
+  parentId   String?
+  parent     Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies    Comment[] @relation("CommentReplies")
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@index([documentId])
+  @@index([userId])
+  @@map("comments")
+}
+
+// ===========================================
+// AUDIT LOG & ACTIVITY
+// ===========================================
+
+model AuditLog {
+  id         String     @id @default(cuid())
+  action     AuditAction
+  entityType String     // document, user, folder, etc.
+  entityId   String
+  userId     String?
+  user       User?      @relation(fields: [userId], references: [id])
+  documentId String?
+  document   Document?  @relation(fields: [documentId], references: [id], onDelete: SetNull)
+  details    Json?
+  ipAddress  String?
+  userAgent  String?    @db.Text
+  createdAt  DateTime   @default(now())
+
+  @@index([entityType, entityId])
+  @@index([userId])
+  @@index([documentId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+enum AuditAction {
+  CREATE
+  READ
+  UPDATE
+  DELETE
+  DOWNLOAD
+  UPLOAD
+  SHARE
+  LOCK
+  UNLOCK
+  CHECKOUT
+  CHECKIN
+  APPROVE
+  REJECT
+  COMMENT
+  LOGIN
+  LOGOUT
+  PERMISSION_CHANGE
+}
+
+// ===========================================
+// NOTIFICATIONS
+// ===========================================
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      NotificationType
+  title     String
+  message   String           @db.Text
+  link      String?
+  isRead    Boolean          @default(false)
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  @@index([userId])
+  @@index([isRead])
+  @@map("notifications")
+}
+
+enum NotificationType {
+  DOCUMENT_SHARED
+  WORKFLOW_ASSIGNED
+  WORKFLOW_COMPLETED
+  COMMENT_ADDED
+  DOCUMENT_APPROVED
+  DOCUMENT_REJECTED
+  MENTION
+  SYSTEM
+}
+
+// ===========================================
+// WEBHOOKS & INTEGRATIONS
+// ===========================================
+
+model Webhook {
+  id        String        @id @default(cuid())
+  name      String
+  url       String
+  secret    String?
+  events    Json          // Array of event types to trigger on
+  isActive  Boolean       @default(true)
+  userId    String
+  user      User          @relation(fields: [userId], references: [id])
+  logs      WebhookLog[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@map("webhooks")
+}
+
+model WebhookLog {
+  id         String   @id @default(cuid())
+  webhookId  String
+  webhook    Webhook  @relation(fields: [webhookId], references: [id], onDelete: Cascade)
+  event      String
+  payload    Json
+  response   String?  @db.Text
+  statusCode Int?
+  success    Boolean
+  error      String?  @db.Text
+  createdAt  DateTime @default(now())
+
+  @@index([webhookId])
+  @@map("webhook_logs")
+}
+
+// ===========================================
+// BACKGROUND JOBS & UPLOADS
+// ===========================================
+
+model Upload {
+  id          String       @id @default(cuid())
+  userId      String
+  user        User         @relation(fields: [userId], references: [id])
+  fileName    String
+  fileSize    BigInt
+  mimeType    String
+  status      UploadStatus @default(PENDING)
+  progress    Int          @default(0)
+  error       String?
+  tempPath    String?
+  createdAt   DateTime     @default(now())
+  completedAt DateTime?
+
+  @@index([userId])
+  @@map("uploads")
+}
+
+enum UploadStatus {
+  PENDING
+  UPLOADING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model BackgroundJob {
+  id          String    @id @default(cuid())
+  type        String    // OCR, VIRUS_SCAN, THUMBNAIL, INDEX
+  entityType  String
+  entityId    String
+  status      JobStatus @default(PENDING)
+  priority    Int       @default(0)
+  attempts    Int       @default(0)
+  maxAttempts Int       @default(3)
+  payload     Json?
+  result      Json?
+  error       String?   @db.Text
+  scheduledAt DateTime  @default(now())
+  startedAt   DateTime?
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([type])
+  @@index([status])
+  @@index([scheduledAt])
+  @@map("background_jobs")
+}
+
+enum JobStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+// ===========================================
+// SYSTEM SETTINGS & CONFIGURATION
+// ===========================================
+
+model SystemSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   @db.Text
+  type      String   @default("string") // string, number, boolean, json
+  category  String   @default("general")
+  label     String?
+  description String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([category])
+  @@map("system_settings")
+}
+
+model RetentionPolicy {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  daysToRetain Int
+  action      String   @default("archive") // archive, delete
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("retention_policies")
+}

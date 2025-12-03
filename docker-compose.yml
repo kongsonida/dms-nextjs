@@ -1,0 +1,133 @@
+version: '3.8'
+
+services:
+  # Main Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dms-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=mysql://dms_user:dms_password@mysql:3306/dms
+      - NEXTAUTH_URL=http://localhost:3000
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET:-your-nextauth-secret-key-change-in-production}
+      - STORAGE_PATH=/data/uploads
+      - REDIS_URL=redis://redis:6379
+      - MEILISEARCH_HOST=http://meilisearch:7700
+      - MEILISEARCH_API_KEY=${MEILISEARCH_API_KEY:-your-meilisearch-master-key}
+      - CLAMAV_HOST=clamav
+      - CLAMAV_PORT=3310
+      - OCR_ENABLED=true
+    volumes:
+      - upload_data:/data/uploads
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      meilisearch:
+        condition: service_started
+    networks:
+      - dms-network
+
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: dms-mysql
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-rootpassword}
+      - MYSQL_DATABASE=dms
+      - MYSQL_USER=dms_user
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-dms_password}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - dms-network
+
+  # Redis for BullMQ
+  redis:
+    image: redis:7-alpine
+    container_name: dms-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - dms-network
+
+  # Meilisearch for full-text search
+  meilisearch:
+    image: getmeili/meilisearch:v1.5
+    container_name: dms-meilisearch
+    restart: unless-stopped
+    ports:
+      - "7700:7700"
+    environment:
+      - MEILI_MASTER_KEY=${MEILISEARCH_API_KEY:-your-meilisearch-master-key}
+      - MEILI_ENV=production
+    volumes:
+      - meilisearch_data:/meili_data
+    networks:
+      - dms-network
+
+  # ClamAV for virus scanning
+  clamav:
+    image: clamav/clamav:latest
+    container_name: dms-clamav
+    restart: unless-stopped
+    ports:
+      - "3310:3310"
+    volumes:
+      - clamav_data:/var/lib/clamav
+    networks:
+      - dms-network
+
+  # Background Worker (for BullMQ jobs)
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    container_name: dms-worker
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=mysql://dms_user:dms_password@mysql:3306/dms
+      - REDIS_URL=redis://redis:6379
+      - MEILISEARCH_HOST=http://meilisearch:7700
+      - MEILISEARCH_API_KEY=${MEILISEARCH_API_KEY:-your-meilisearch-master-key}
+      - CLAMAV_HOST=clamav
+      - CLAMAV_PORT=3310
+      - STORAGE_PATH=/data/uploads
+      - OCR_ENABLED=true
+    volumes:
+      - upload_data:/data/uploads
+    depends_on:
+      - mysql
+      - redis
+      - meilisearch
+    networks:
+      - dms-network
+
+volumes:
+  mysql_data:
+  redis_data:
+  meilisearch_data:
+  clamav_data:
+  upload_data:
+
+networks:
+  dms-network:
+    driver: bridge

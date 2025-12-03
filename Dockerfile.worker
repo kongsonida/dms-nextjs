@@ -1,0 +1,41 @@
+# Background Worker Dockerfile
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install dependencies for native modules and OCR
+RUN apk add --no-cache libc6-compat tesseract-ocr tesseract-ocr-data-eng poppler-utils
+
+# Copy package files
+COPY package*.json ./
+COPY prisma ./prisma/
+
+# Install dependencies
+RUN npm ci --only=production
+
+# Generate Prisma client
+RUN npx prisma generate
+
+# Copy worker source code
+COPY src/workers ./src/workers
+COPY src/lib ./src/lib
+COPY tsconfig.json ./
+
+# Install ts-node for running TypeScript
+RUN npm install -g ts-node typescript
+
+# Create non-root user
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 worker
+
+# Create upload directory
+RUN mkdir -p /data/uploads && chown -R worker:nodejs /data
+
+# Set environment variables
+ENV NODE_ENV=production
+
+# Switch to non-root user
+USER worker
+
+# Start the worker
+CMD ["ts-node", "--transpile-only", "src/workers/index.ts"]
