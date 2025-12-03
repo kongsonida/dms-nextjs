@@ -9,7 +9,9 @@
       "Bash(npm run build:*)",
       "Bash(npx prisma generate:*)",
       "Bash(git add:*)",
-      "Bash(git commit -m \"$(cat <<''EOF''\nfix: Update configurations and fix TypeScript/build issues\n\n- Remove obsolete docker-compose version attribute\n- Fix TypeScript strict mode issues in API routes\n- Update Prisma schema generator settings\n- Simplify Docker configurations\n- Add Prisma migrations\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+      "Bash(git commit -m \"$(cat <<''EOF''\nfix: Update configurations and fix TypeScript/build issues\n\n- Remove obsolete docker-compose version attribute\n- Fix TypeScript strict mode issues in API routes\n- Update Prisma schema generator settings\n- Simplify Docker configurations\n- Add Prisma migrations\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(npm run dev:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []
