@@ -20,15 +20,17 @@ import {
   ChevronRight,
   Home,
   Upload,
+  X,
 } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 const mainNavigation = [
-  { name: 'Dashboard', href: '/documents', icon: Home },
+  { name: 'Dashboard', href: '/dashboard', icon: Home },
   { name: 'Documents', href: '/documents', icon: FileText },
   { name: 'Folders', href: '/folders', icon: FolderOpen },
   { name: 'Upload', href: '/documents/upload', icon: Upload },
@@ -49,8 +51,13 @@ export function Sidebar() {
   const { data: session } = useSession();
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
 
   const isAdmin = session?.user?.role === 'ADMIN';
+
+  const handleLogout = () => {
+    signOut({ callbackUrl: '/login' });
+  };
 
   return (
     <aside
@@ -62,13 +69,13 @@ export function Sidebar() {
       {/* Logo */}
       <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200 dark:border-gray-800">
         {!collapsed && (
-          <Link href="/documents" className="flex items-center space-x-2">
+          <Link href="/dashboard" className="flex items-center space-x-2">
             <FileText className="h-8 w-8 text-indigo-600" />
             <span className="text-xl font-bold text-gray-900 dark:text-white">DMS</span>
           </Link>
         )}
         {collapsed && (
-          <Link href="/documents" className="mx-auto">
+          <Link href="/dashboard" className="mx-auto">
             <FileText className="h-8 w-8 text-indigo-600" />
           </Link>
         )}
@@ -173,25 +180,27 @@ export function Sidebar() {
                   </Button>
                 </Link>
               </div>
-              <div className="flex items-center space-x-3 p-2 rounded-lg bg-gray-50 dark:bg-gray-800">
-                <div className="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center flex-shrink-0">
-                  <span className="text-indigo-600 dark:text-indigo-400 font-medium">
-                    {(session?.user?.name || session?.user?.email || 'U').charAt(0).toUpperCase()}
-                  </span>
+              <Link href="/profile">
+                <div className="flex items-center space-x-3 p-2 rounded-lg bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer transition-colors">
+                  <div className="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center flex-shrink-0">
+                    <span className="text-indigo-600 dark:text-indigo-400 font-medium">
+                      {(session?.user?.name || session?.user?.email || 'U').charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                      {session?.user?.name || session?.user?.email}
+                    </p>
+                    <Badge variant="outline" className="text-xs">
+                      {session?.user?.role}
+                    </Badge>
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                    {session?.user?.name || session?.user?.email}
-                  </p>
-                  <Badge variant="outline" className="text-xs">
-                    {session?.user?.role}
-                  </Badge>
-                </div>
-              </div>
+              </Link>
               <Button
                 variant="outline"
                 className="w-full justify-start"
-                onClick={() => signOut({ callbackUrl: '/login' })}
+                onClick={() => setShowLogoutDialog(true)}
               >
                 <LogOut className="h-4 w-4 mr-2" />
                 Sign Out
@@ -209,7 +218,7 @@ export function Sidebar() {
                 variant="ghost"
                 size="icon"
                 className="w-full h-8"
-                onClick={() => signOut({ callbackUrl: '/login' })}
+                onClick={() => setShowLogoutDialog(true)}
                 title="Sign Out"
               >
                 <LogOut className="h-4 w-4" />
@@ -218,6 +227,44 @@ export function Sidebar() {
           )}
         </div>
       </div>
+
+      {/* Logout Confirmation Dialog */}
+      {showLogoutDialog && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <Card className="w-full max-w-sm mx-4">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-lg">Sign Out</CardTitle>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowLogoutDialog(false)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-gray-600 dark:text-gray-400">
+                Are you sure you want to sign out?
+              </p>
+              <div className="flex justify-end space-x-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowLogoutDialog(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="destructive"
+                  onClick={handleLogout}
+                >
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Sign Out
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </aside>
   );
 }

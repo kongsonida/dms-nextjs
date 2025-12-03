@@ -2,7 +2,8 @@ import fs from 'fs/promises';
 import path from 'path';
 import { hashFile, sanitizeFilename, generateToken } from './utils';
 
-const STORAGE_PATH = process.env.STORAGE_PATH || '/data/uploads';
+// Use local storage path relative to project root
+const STORAGE_PATH = process.env.STORAGE_PATH || path.join(process.cwd(), 'uploads');
 const MAX_FILE_SIZE = parseInt(process.env.MAX_FILE_SIZE || '104857600', 10); // 100MB default
 
 export interface StoredFile {

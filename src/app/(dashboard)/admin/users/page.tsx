@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 import {
   Users,
   Plus,
@@ -15,6 +17,7 @@ import {
   X,
   Check,
   AlertTriangle,
+  User,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -22,7 +25,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { formatDate } from '@/lib/utils';
 
-interface User {
+interface UserData {
   id: string;
   name: string | null;
   email: string;
@@ -34,7 +37,10 @@ interface User {
 }
 
 export default function AdminUsersPage() {
-  const [users, setUsers] = useState<User[]>([]);
+  const { data: session } = useSession();
+  const currentUserId = session?.user?.id;
+
+  const [users, setUsers] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [roleFilter, setRoleFilter] = useState('');
@@ -44,7 +50,7 @@ export default function AdminUsersPage() {
   // Modal states
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedUser, setSelectedUser] = useState<UserData | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
 
   // Form states
@@ -157,7 +163,7 @@ export default function AdminUsersPage() {
     }
   };
 
-  const toggleUserStatus = async (user: User) => {
+  const toggleUserStatus = async (user: UserData) => {
     try {
       const response = await fetch(`/api/users/${user.id}`, {
         method: 'PATCH',
@@ -173,7 +179,7 @@ export default function AdminUsersPage() {
     }
   };
 
-  const openEditModal = (user: User) => {
+  const openEditModal = (user: UserData) => {
     setSelectedUser(user);
     setFormData({
       name: user.name || '',
@@ -322,21 +328,36 @@ export default function AdminUsersPage() {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center space-x-2">
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => openEditModal(user)}
-                        >
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className="text-red-600 hover:text-red-700"
-                          onClick={() => handleDeleteUser(user.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        {user.id === currentUserId ? (
+                          <>
+                            <Link href="/profile">
+                              <Button size="sm" variant="ghost" title="My Profile">
+                                <User className="h-4 w-4" />
+                              </Button>
+                            </Link>
+                            <Badge variant="secondary" className="text-xs">You</Badge>
+                          </>
+                        ) : (
+                          <>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => openEditModal(user)}
+                              title="Edit user"
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="text-red-600 hover:text-red-700"
+                              onClick={() => handleDeleteUser(user.id)}
+                              title="Delete user"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </>
+                        )}
                       </div>
                     </td>
                   </tr>

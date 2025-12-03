@@ -305,37 +305,43 @@ export async function POST(request: NextRequest) {
       mimeType: storedFile.mimeType,
     });
 
-    // Queue background jobs
-    addVirusScanJob({
-      documentId: document.id,
-      filePath: storedFile.filePath,
-    }).catch(console.error);
+    // Queue background jobs (non-blocking - upload succeeds even if Redis is unavailable)
+    Promise.allSettled([
+      addVirusScanJob({
+        documentId: document.id,
+        filePath: storedFile.filePath,
+      }),
+      addOcrJob({
+        documentId: document.id,
+        filePath: storedFile.filePath,
+        mimeType: storedFile.mimeType,
+      }),
+      addThumbnailJob({
+        documentId: document.id,
+        filePath: storedFile.filePath,
+        mimeType: storedFile.mimeType,
+      }),
+      addIndexJob({
+        documentId: document.id,
+        action: 'add',
+      }),
+    ]).then((results) => {
+      results.forEach((result, index) => {
+        if (result.status === 'rejected') {
+          const jobNames = ['virus scan', 'OCR', 'thumbnail', 'index'];
+          console.warn(`${jobNames[index]} job not queued:`, result.reason?.message || result.reason);
+        }
+      });
+    });
 
-    addOcrJob({
-      documentId: document.id,
-      filePath: storedFile.filePath,
-      mimeType: storedFile.mimeType,
-    }).catch(console.error);
-
-    addThumbnailJob({
-      documentId: document.id,
-      filePath: storedFile.filePath,
-      mimeType: storedFile.mimeType,
-    }).catch(console.error);
-
-    addIndexJob({
-      documentId: document.id,
-      action: 'add',
-    }).catch(console.error);
-
-    // Dispatch webhook
+    // Dispatch webhook (non-blocking)
     onDocumentCreated({
       id: document.id,
       title: document.title,
       fileName: document.fileName,
       ownerId: document.ownerId,
       ownerName: document.owner.name || undefined,
-    }).catch(console.error);
+    }).catch((e) => console.warn('Webhook not dispatched:', e?.message || e));
 
     return NextResponse.json(
       {
