@@ -28,8 +28,8 @@ export const updateUserSchema = z.object({
 // Document schemas
 export const createDocumentSchema = z.object({
   title: z.string().min(1, 'Title is required').max(255, 'Title too long'),
-  description: z.string().optional(),
-  documentNumber: z.string().optional(),
+  description: z.string().nullable().optional().transform(v => v || undefined),
+  documentNumber: z.string().nullable().optional().transform(v => v || undefined),
   documentType: z
     .enum([
       'GENERAL',
@@ -43,12 +43,14 @@ export const createDocumentSchema = z.object({
       'FORM',
       'OTHER',
     ])
-    .optional(),
-  direction: z.enum(['INCOMING', 'OUTGOING', 'INTERNAL']).optional(),
-  confidentiality: z.enum(['PUBLIC', 'INTERNAL', 'CONFIDENTIAL', 'RESTRICTED']).optional(),
-  folderId: z.string().optional(),
-  tags: z.array(z.string()).optional(),
-  metadata: z.record(z.string(), z.string()).optional(),
+    .nullable()
+    .optional()
+    .transform(v => v || undefined),
+  direction: z.enum(['INCOMING', 'OUTGOING', 'INTERNAL']).nullable().optional().transform(v => v || undefined),
+  confidentiality: z.enum(['PUBLIC', 'INTERNAL', 'CONFIDENTIAL', 'RESTRICTED']).nullable().optional().transform(v => v || undefined),
+  folderId: z.string().nullable().optional().transform(v => v || undefined),
+  tags: z.array(z.string()).nullable().optional().transform(v => v || undefined),
+  metadata: z.record(z.string(), z.string()).nullable().optional().transform(v => v || undefined),
 });
 
 export const updateDocumentSchema = z.object({
