@@ -199,8 +199,8 @@ export default function TrashPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Trash</h1>
-          <p className="text-gray-500">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Trash</h1>
+          <p className="text-gray-500 dark:text-gray-400">
             Deleted documents are kept for 30 days before permanent deletion
           </p>
         </div>
@@ -259,7 +259,7 @@ export default function TrashPage() {
           <CardContent className="py-12 text-center">
             <Trash2 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium">Trash is empty</h3>
-            <p className="text-gray-500 mt-1">
+            <p className="text-gray-500 dark:text-gray-400 mt-1">
               Deleted documents will appear here
             </p>
           </CardContent>
@@ -270,7 +270,7 @@ export default function TrashPage() {
             <div className="flex items-center">
               <button
                 onClick={toggleSelectAll}
-                className="mr-3 text-gray-400 hover:text-gray-600"
+                className="mr-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-400"
               >
                 {selectedIds.size === documents.length ? (
                   <CheckSquare className="h-5 w-5 text-indigo-600" />
@@ -284,17 +284,17 @@ export default function TrashPage() {
             </div>
           </CardHeader>
           <CardContent className="p-0">
-            <div className="divide-y">
+            <div className="divide-y divide-gray-200 dark:divide-gray-800">
               {documents.map((doc) => {
                 const daysRemaining = getDaysUntilPermanentDeletion(doc.retentionDate);
                 return (
                   <div
                     key={doc.id}
-                    className="p-4 hover:bg-gray-50 flex items-center"
+                    className="p-4 hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center"
                   >
                     <button
                       onClick={() => toggleSelect(doc.id)}
-                      className="mr-3 text-gray-400 hover:text-gray-600"
+                      className="mr-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-400"
                     >
                       {selectedIds.has(doc.id) ? (
                         <CheckSquare className="h-5 w-5 text-indigo-600" />
@@ -306,10 +306,10 @@ export default function TrashPage() {
                     <div className="flex-1">
                       <div className="flex items-center space-x-2">
                         <FileText className="h-5 w-5 text-gray-400" />
-                        <span className="font-medium text-gray-900">{doc.title}</span>
+                        <span className="font-medium text-gray-900 dark:text-white">{doc.title}</span>
                         <Badge variant="secondary">{doc.documentType}</Badge>
                       </div>
-                      <div className="flex items-center space-x-4 mt-1 text-sm text-gray-500">
+                      <div className="flex items-center space-x-4 mt-1 text-sm text-gray-500 dark:text-gray-400">
                         <span>{doc.fileName}</span>
                         <span>{formatFileSize(doc.size)}</span>
                         <span className="flex items-center">
@@ -329,7 +329,7 @@ export default function TrashPage() {
                               Will be permanently deleted in {daysRemaining} day{daysRemaining !== 1 ? 's' : ''}
                             </span>
                           ) : (
-                            <span className="text-xs text-gray-500">
+                            <span className="text-xs text-gray-500 dark:text-gray-400">
                               {daysRemaining} days until permanent deletion
                             </span>
                           )}

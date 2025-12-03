@@ -199,8 +199,8 @@ export default function AdminUsersPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
-          <p className="text-gray-500">Manage users and their permissions</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">User Management</h1>
+          <p className="text-gray-500 dark:text-gray-400">Manage users and their permissions</p>
         </div>
         <Button onClick={() => setShowCreateModal(true)}>
           <Plus className="h-4 w-4 mr-2" />
@@ -222,7 +222,7 @@ export default function AdminUsersPage() {
         <select
           value={roleFilter}
           onChange={(e) => { setRoleFilter(e.target.value); setPage(1); }}
-          className="px-3 py-2 border border-gray-300 rounded-md"
+          className="px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md"
         >
           <option value="">All Roles</option>
           <option value="ADMIN">Admin</option>
@@ -242,38 +242,38 @@ export default function AdminUsersPage() {
           <CardContent className="py-12 text-center">
             <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium">No users found</h3>
-            <p className="text-gray-500 mt-1">Try adjusting your search or filters</p>
+            <p className="text-gray-500 dark:text-gray-400 mt-1">Try adjusting your search or filters</p>
           </CardContent>
         </Card>
       ) : (
         <Card>
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50 border-b">
+              <thead className="bg-gray-50 dark:bg-gray-800 border-b">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     User
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Role
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Documents
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Last Login
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
                 {users.map((user) => (
-                  <tr key={user.id} className="hover:bg-gray-50">
+                  <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800">
                     <td className="px-6 py-4">
                       <div className="flex items-center">
                         <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
@@ -282,10 +282,10 @@ export default function AdminUsersPage() {
                           </span>
                         </div>
                         <div className="ml-4">
-                          <div className="font-medium text-gray-900">
+                          <div className="font-medium text-gray-900 dark:text-white">
                             {user.name || 'No name'}
                           </div>
-                          <div className="text-sm text-gray-500">{user.email}</div>
+                          <div className="text-sm text-gray-500 dark:text-gray-400">{user.email}</div>
                         </div>
                       </div>
                     </td>
@@ -314,10 +314,10 @@ export default function AdminUsersPage() {
                         )}
                       </button>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">
+                    <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
                       {user.documentsCount}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">
+                    <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
                       {user.lastLogin ? formatDate(user.lastLogin) : 'Never'}
                     </td>
                     <td className="px-6 py-4">
@@ -357,7 +357,7 @@ export default function AdminUsersPage() {
           >
             Previous
           </Button>
-          <span className="flex items-center px-4 text-sm text-gray-600">
+          <span className="flex items-center px-4 text-sm text-gray-600 dark:text-gray-400">
             Page {page} of {totalPages}
           </span>
           <Button
@@ -387,7 +387,7 @@ export default function AdminUsersPage() {
             <CardContent>
               <form onSubmit={handleCreateUser} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Name
                   </label>
                   <Input
@@ -397,7 +397,7 @@ export default function AdminUsersPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Email *
                   </label>
                   <Input
@@ -409,7 +409,7 @@ export default function AdminUsersPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Password *
                   </label>
                   <Input
@@ -421,13 +421,13 @@ export default function AdminUsersPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Role
                   </label>
                   <select
                     value={formData.role}
                     onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md"
                   >
                     <option value="VIEWER">Viewer</option>
                     <option value="EDITOR">Editor</option>
@@ -473,7 +473,7 @@ export default function AdminUsersPage() {
             <CardContent>
               <form onSubmit={handleUpdateUser} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Name
                   </label>
                   <Input
@@ -483,18 +483,18 @@ export default function AdminUsersPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Email
                   </label>
                   <Input
                     type="email"
                     value={formData.email}
                     disabled
-                    className="bg-gray-100"
+                    className="bg-gray-100 dark:bg-gray-800"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     New Password (leave blank to keep current)
                   </label>
                   <Input
@@ -505,13 +505,13 @@ export default function AdminUsersPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Role
                   </label>
                   <select
                     value={formData.role}
                     onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md"
                   >
                     <option value="VIEWER">Viewer</option>
                     <option value="EDITOR">Editor</option>
@@ -525,9 +525,9 @@ export default function AdminUsersPage() {
                     id="isActive"
                     checked={formData.isActive}
                     onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                    className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                    className="h-4 w-4 text-indigo-600 border-gray-300 dark:border-gray-700 rounded"
                   />
-                  <label htmlFor="isActive" className="ml-2 text-sm text-gray-700">
+                  <label htmlFor="isActive" className="ml-2 text-sm text-gray-700 dark:text-gray-300">
                     Account is active
                   </label>
                 </div>

@@ -116,8 +116,8 @@ export default function StorageManagementPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Storage Management</h1>
-        <p className="text-gray-500">Monitor and manage user storage quotas</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Storage Management</h1>
+        <p className="text-gray-500 dark:text-gray-400">Monitor and manage user storage quotas</p>
       </div>
 
       {/* Overview Cards */}
@@ -127,17 +127,17 @@ export default function StorageManagementPage() {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-500">Total Storage Used</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Total Storage Used</p>
                   <p className="text-2xl font-bold">{formatBytes(overview.totalUsed)}</p>
                 </div>
                 <HardDrive className="h-8 w-8 text-indigo-600" />
               </div>
               <div className="mt-3">
-                <div className="flex justify-between text-xs text-gray-500 mb-1">
+                <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
                   <span>{getUsagePercentage(overview.totalUsed, overview.totalQuota).toFixed(1)}% used</span>
                   <span>{formatBytes(overview.totalQuota)} total</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                   <div
                     className={`h-2 rounded-full ${getUsageColor(getUsagePercentage(overview.totalUsed, overview.totalQuota))}`}
                     style={{ width: `${Math.min(getUsagePercentage(overview.totalUsed, overview.totalQuota), 100)}%` }}
@@ -151,7 +151,7 @@ export default function StorageManagementPage() {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-500">Total Users</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Total Users</p>
                   <p className="text-2xl font-bold">{overview.usersCount}</p>
                 </div>
                 <User className="h-8 w-8 text-green-600" />
@@ -163,7 +163,7 @@ export default function StorageManagementPage() {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-500">Total Documents</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Total Documents</p>
                   <p className="text-2xl font-bold">{overview.documentsCount}</p>
                 </div>
                 <TrendingUp className="h-8 w-8 text-blue-600" />
@@ -175,7 +175,7 @@ export default function StorageManagementPage() {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-500">Available Space</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Available Space</p>
                   <p className="text-2xl font-bold">{formatBytes(overview.totalQuota - overview.totalUsed)}</p>
                 </div>
                 <HardDrive className="h-8 w-8 text-yellow-600" />
@@ -206,7 +206,7 @@ export default function StorageManagementPage() {
           <CardContent className="py-12 text-center">
             <HardDrive className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium">No users found</h3>
-            <p className="text-gray-500 mt-1">Try adjusting your search</p>
+            <p className="text-gray-500 dark:text-gray-400 mt-1">Try adjusting your search</p>
           </CardContent>
         </Card>
       ) : (
@@ -216,49 +216,49 @@ export default function StorageManagementPage() {
           </CardHeader>
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50 border-b">
+              <thead className="bg-gray-50 dark:bg-gray-800 border-b">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
                     User
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
                     Role
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
                     Documents
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
                     Storage Used
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
                     Quota
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
                     Usage
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
                 {users.map((user) => {
                   const usagePercent = getUsagePercentage(user.storageUsed, user.storageQuota);
                   return (
-                    <tr key={user.id} className="hover:bg-gray-50">
+                    <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800">
                       <td className="px-6 py-4">
                         <div>
-                          <p className="font-medium text-gray-900">{user.name || 'No name'}</p>
-                          <p className="text-sm text-gray-500">{user.email}</p>
+                          <p className="font-medium text-gray-900 dark:text-white">{user.name || 'No name'}</p>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">{user.email}</p>
                         </div>
                       </td>
                       <td className="px-6 py-4">
                         <Badge variant="secondary">{user.role}</Badge>
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-900">
+                      <td className="px-6 py-4 text-sm text-gray-900 dark:text-white">
                         {user.documentsCount}
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-900">
+                      <td className="px-6 py-4 text-sm text-gray-900 dark:text-white">
                         {formatBytes(user.storageUsed)}
                       </td>
                       <td className="px-6 py-4">
@@ -272,20 +272,20 @@ export default function StorageManagementPage() {
                               onChange={(e) => setNewQuota(e.target.value)}
                               className="w-20 h-8"
                             />
-                            <span className="text-sm text-gray-500">GB</span>
+                            <span className="text-sm text-gray-500 dark:text-gray-400">GB</span>
                           </div>
                         ) : (
-                          <span className="text-sm text-gray-900">
+                          <span className="text-sm text-gray-900 dark:text-white">
                             {formatBytes(user.storageQuota)}
                           </span>
                         )}
                       </td>
                       <td className="px-6 py-4">
                         <div className="w-32">
-                          <div className="flex justify-between text-xs text-gray-500 mb-1">
+                          <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
                             <span>{usagePercent.toFixed(1)}%</span>
                           </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                             <div
                               className={`h-2 rounded-full ${getUsageColor(usagePercent)}`}
                               style={{ width: `${Math.min(usagePercent, 100)}%` }}

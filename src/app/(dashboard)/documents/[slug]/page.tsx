@@ -220,14 +220,14 @@ export default function DocumentDetailPage() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{document.title}</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{document.title}</h1>
             <div className="flex items-center space-x-2 mt-1">
               {getStatusBadge(document.status)}
-              <span className="text-gray-500">•</span>
-              <span className="text-sm text-gray-500">{document.documentType}</span>
+              <span className="text-gray-500 dark:text-gray-400">•</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">{document.documentType}</span>
               {document.isLocked && (
                 <>
-                  <span className="text-gray-500">•</span>
+                  <span className="text-gray-500 dark:text-gray-400">•</span>
                   <Badge variant="warning">
                     <Lock className="w-3 h-3 mr-1" />
                     Locked by {document.lockedBy?.name || document.lockedBy?.email}
@@ -287,13 +287,13 @@ export default function DocumentDetailPage() {
               className={`flex items-center px-1 py-4 border-b-2 text-sm font-medium ${
                 activeTab === tab.id
                   ? 'border-indigo-500 text-indigo-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700'
               }`}
             >
               <tab.icon className="h-4 w-4 mr-2" />
               {tab.label}
               {tab.count !== undefined && (
-                <span className="ml-2 bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-xs">
+                <span className="ml-2 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-2 py-0.5 rounded-full text-xs">
                   {tab.count}
                 </span>
               )}
@@ -314,35 +314,35 @@ export default function DocumentDetailPage() {
               <CardContent className="space-y-4">
                 {document.description && (
                   <div>
-                    <label className="text-sm font-medium text-gray-500">Description</label>
-                    <p className="mt-1 text-gray-900">{document.description}</p>
+                    <label className="text-sm font-medium text-gray-500 dark:text-gray-400">Description</label>
+                    <p className="mt-1 text-gray-900 dark:text-white">{document.description}</p>
                   </div>
                 )}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-medium text-gray-500">File Name</label>
-                    <p className="mt-1 text-gray-900">{document.originalName}</p>
+                    <label className="text-sm font-medium text-gray-500 dark:text-gray-400">File Name</label>
+                    <p className="mt-1 text-gray-900 dark:text-white">{document.originalName}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-500">File Size</label>
-                    <p className="mt-1 text-gray-900">{formatBytes(BigInt(document.fileSize))}</p>
+                    <label className="text-sm font-medium text-gray-500 dark:text-gray-400">File Size</label>
+                    <p className="mt-1 text-gray-900 dark:text-white">{formatBytes(BigInt(document.fileSize))}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-500">Document Type</label>
-                    <p className="mt-1 text-gray-900">{document.documentType}</p>
+                    <label className="text-sm font-medium text-gray-500 dark:text-gray-400">Document Type</label>
+                    <p className="mt-1 text-gray-900 dark:text-white">{document.documentType}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-500">Direction</label>
-                    <p className="mt-1 text-gray-900">{document.direction}</p>
+                    <label className="text-sm font-medium text-gray-500 dark:text-gray-400">Direction</label>
+                    <p className="mt-1 text-gray-900 dark:text-white">{document.direction}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-500">Confidentiality</label>
-                    <p className="mt-1 text-gray-900">{document.confidentiality}</p>
+                    <label className="text-sm font-medium text-gray-500 dark:text-gray-400">Confidentiality</label>
+                    <p className="mt-1 text-gray-900 dark:text-white">{document.confidentiality}</p>
                   </div>
                   {document.documentNumber && (
                     <div>
-                      <label className="text-sm font-medium text-gray-500">Document Number</label>
-                      <p className="mt-1 text-gray-900">{document.documentNumber}</p>
+                      <label className="text-sm font-medium text-gray-500 dark:text-gray-400">Document Number</label>
+                      <p className="mt-1 text-gray-900 dark:text-white">{document.documentNumber}</p>
                     </div>
                   )}
                 </div>
@@ -359,8 +359,8 @@ export default function DocumentDetailPage() {
                   <div className="grid grid-cols-2 gap-4">
                     {Object.entries(document.metadata).map(([key, value]) => (
                       <div key={key}>
-                        <label className="text-sm font-medium text-gray-500">{key}</label>
-                        <p className="mt-1 text-gray-900">{value}</p>
+                        <label className="text-sm font-medium text-gray-500 dark:text-gray-400">{key}</label>
+                        <p className="mt-1 text-gray-900 dark:text-white">{value}</p>
                       </div>
                     ))}
                   </div>
@@ -377,11 +377,11 @@ export default function DocumentDetailPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-500">Virus Scan</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">Virus Scan</span>
                   {getScanBadge(document.virusScanStatus, document.virusScanResult)}
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-500">OCR Status</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">OCR Status</span>
                   <Badge variant={document.ocrStatus === 'COMPLETED' ? 'success' : 'secondary'}>
                     {document.ocrStatus}
                   </Badge>
@@ -400,7 +400,7 @@ export default function DocumentDetailPage() {
                   </div>
                   <div>
                     <p className="font-medium">{document.owner.name || 'Unknown'}</p>
-                    <p className="text-sm text-gray-500">{document.owner.email}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{document.owner.email}</p>
                   </div>
                 </div>
               </CardContent>
@@ -430,15 +430,15 @@ export default function DocumentDetailPage() {
               </CardHeader>
               <CardContent className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-500">Created</span>
+                  <span className="text-gray-500 dark:text-gray-400">Created</span>
                   <span>{formatDate(document.createdAt)}</span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-500">Updated</span>
+                  <span className="text-gray-500 dark:text-gray-400">Updated</span>
                   <span>{formatDate(document.updatedAt)}</span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-500">Version</span>
+                  <span className="text-gray-500 dark:text-gray-400">Version</span>
                   <span>v{document.currentVersion}</span>
                 </div>
               </CardContent>
@@ -450,19 +450,19 @@ export default function DocumentDetailPage() {
       {activeTab === 'versions' && (
         <Card>
           <CardContent className="p-0">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
+              <thead className="bg-gray-50 dark:bg-gray-800">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Version</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">File</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Size</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Change Note</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created By</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Version</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">File</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Size</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Change Note</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Created By</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Date</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
                 {document.versions.map((version) => (
                   <tr key={version.id}>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -471,14 +471,14 @@ export default function DocumentDetailPage() {
                       </Badge>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm">{version.fileName}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                       {formatBytes(BigInt(version.fileSize))}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">{version.changeNote || '-'}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{version.changeNote || '-'}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm">
                       {version.createdBy.name || version.createdBy.email}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                       {formatDate(version.createdAt)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right">
@@ -501,7 +501,7 @@ export default function DocumentDetailPage() {
           <CardContent className="py-12 text-center">
             <MessageSquare className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium">Comments coming soon</h3>
-            <p className="text-gray-500 mt-1">This feature is under development</p>
+            <p className="text-gray-500 dark:text-gray-400 mt-1">This feature is under development</p>
           </CardContent>
         </Card>
       )}

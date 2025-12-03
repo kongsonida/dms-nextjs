@@ -202,8 +202,8 @@ export default function AdminSettingsPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">System Settings</h1>
-          <p className="text-gray-500">Configure system-wide settings and preferences</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">System Settings</h1>
+          <p className="text-gray-500 dark:text-gray-400">Configure system-wide settings and preferences</p>
         </div>
         <Button onClick={handleSave} disabled={saving}>
           {saving ? (
@@ -227,7 +227,7 @@ export default function AdminSettingsPage() {
               className={`flex items-center py-4 px-1 border-b-2 font-medium text-sm ${
                 activeTab === tab.id
                   ? 'border-indigo-500 text-indigo-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700 dark:border-gray-700'
               }`}
             >
               <tab.icon className="h-4 w-4 mr-2" />
@@ -249,14 +249,14 @@ export default function AdminSettingsPage() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <label className="font-medium text-gray-700">Enable OCR Processing</label>
-                    <p className="text-sm text-gray-500">Automatically extract text from uploaded documents</p>
+                    <label className="font-medium text-gray-700 dark:text-gray-300">Enable OCR Processing</label>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Automatically extract text from uploaded documents</p>
                   </div>
                   <input
                     type="checkbox"
                     checked={settings.ocr.enabled}
                     onChange={(e) => updateSettings('ocr', 'enabled', e.target.checked)}
-                    className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                    className="h-4 w-4 text-indigo-600 border-gray-300 dark:border-gray-700 rounded"
                   />
                 </div>
               </div>
@@ -267,26 +267,26 @@ export default function AdminSettingsPage() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <label className="font-medium text-gray-700">Enable Virus Scanning</label>
-                    <p className="text-sm text-gray-500">Scan uploaded files for malware</p>
+                    <label className="font-medium text-gray-700 dark:text-gray-300">Enable Virus Scanning</label>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Scan uploaded files for malware</p>
                   </div>
                   <input
                     type="checkbox"
                     checked={settings.virusScan.enabled}
                     onChange={(e) => updateSettings('virusScan', 'enabled', e.target.checked)}
-                    className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                    className="h-4 w-4 text-indigo-600 border-gray-300 dark:border-gray-700 rounded"
                   />
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <label className="font-medium text-gray-700">Scan on Upload</label>
-                    <p className="text-sm text-gray-500">Scan files immediately when uploaded</p>
+                    <label className="font-medium text-gray-700 dark:text-gray-300">Scan on Upload</label>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Scan files immediately when uploaded</p>
                   </div>
                   <input
                     type="checkbox"
                     checked={settings.virusScan.scanOnUpload}
                     onChange={(e) => updateSettings('virusScan', 'scanOnUpload', e.target.checked)}
-                    className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                    className="h-4 w-4 text-indigo-600 border-gray-300 dark:border-gray-700 rounded"
                   />
                 </div>
               </div>
@@ -303,7 +303,7 @@ export default function AdminSettingsPage() {
           </CardHeader>
           <CardContent className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Maximum File Size (MB)
               </label>
               <Input
@@ -315,7 +315,7 @@ export default function AdminSettingsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Storage Quota (MB)
               </label>
               <Input
@@ -326,12 +326,12 @@ export default function AdminSettingsPage() {
               />
               <div className="mt-2">
                 <div className="flex items-center justify-between text-sm mb-1">
-                  <span className="text-gray-500">Used Storage</span>
+                  <span className="text-gray-500 dark:text-gray-400">Used Storage</span>
                   <span className="font-medium">
                     {formatBytes(settings.storage.usedStorage * 1024 * 1024)} / {settings.storage.storageQuota} MB
                   </span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                   <div
                     className="bg-indigo-600 h-2 rounded-full"
                     style={{
@@ -343,10 +343,10 @@ export default function AdminSettingsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Allowed File Types
               </label>
-              <p className="text-sm text-gray-500 mb-2">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
                 Comma-separated list of allowed file extensions
               </p>
               <Input
@@ -375,7 +375,7 @@ export default function AdminSettingsPage() {
               <h4 className="font-medium mb-4">Password Policy</h4>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Minimum Password Length
                   </label>
                   <Input
@@ -387,7 +387,7 @@ export default function AdminSettingsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Max Login Attempts
                   </label>
                   <Input
@@ -406,9 +406,9 @@ export default function AdminSettingsPage() {
                     id="requireUppercase"
                     checked={settings.security.requireUppercase}
                     onChange={(e) => updateSettings('security', 'requireUppercase', e.target.checked)}
-                    className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                    className="h-4 w-4 text-indigo-600 border-gray-300 dark:border-gray-700 rounded"
                   />
-                  <label htmlFor="requireUppercase" className="ml-2 text-sm text-gray-700">
+                  <label htmlFor="requireUppercase" className="ml-2 text-sm text-gray-700 dark:text-gray-300">
                     Require uppercase letters
                   </label>
                 </div>
@@ -418,9 +418,9 @@ export default function AdminSettingsPage() {
                     id="requireNumbers"
                     checked={settings.security.requireNumbers}
                     onChange={(e) => updateSettings('security', 'requireNumbers', e.target.checked)}
-                    className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                    className="h-4 w-4 text-indigo-600 border-gray-300 dark:border-gray-700 rounded"
                   />
-                  <label htmlFor="requireNumbers" className="ml-2 text-sm text-gray-700">
+                  <label htmlFor="requireNumbers" className="ml-2 text-sm text-gray-700 dark:text-gray-300">
                     Require numbers
                   </label>
                 </div>
@@ -430,9 +430,9 @@ export default function AdminSettingsPage() {
                     id="requireSpecialChars"
                     checked={settings.security.requireSpecialChars}
                     onChange={(e) => updateSettings('security', 'requireSpecialChars', e.target.checked)}
-                    className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                    className="h-4 w-4 text-indigo-600 border-gray-300 dark:border-gray-700 rounded"
                   />
-                  <label htmlFor="requireSpecialChars" className="ml-2 text-sm text-gray-700">
+                  <label htmlFor="requireSpecialChars" className="ml-2 text-sm text-gray-700 dark:text-gray-300">
                     Require special characters
                   </label>
                 </div>
@@ -440,7 +440,7 @@ export default function AdminSettingsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Session Timeout (minutes)
               </label>
               <Input
@@ -465,38 +465,38 @@ export default function AdminSettingsPage() {
           <CardContent className="space-y-6">
             <div className="flex items-center justify-between">
               <div>
-                <label className="font-medium text-gray-700">Email Notifications</label>
-                <p className="text-sm text-gray-500">Send notification emails to users</p>
+                <label className="font-medium text-gray-700 dark:text-gray-300">Email Notifications</label>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Send notification emails to users</p>
               </div>
               <input
                 type="checkbox"
                 checked={settings.notifications.emailEnabled}
                 onChange={(e) => updateSettings('notifications', 'emailEnabled', e.target.checked)}
-                className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                className="h-4 w-4 text-indigo-600 border-gray-300 dark:border-gray-700 rounded"
               />
             </div>
 
             <div className="flex items-center justify-between">
               <div>
-                <label className="font-medium text-gray-700">Webhook Notifications</label>
-                <p className="text-sm text-gray-500">Send notifications to webhook endpoints</p>
+                <label className="font-medium text-gray-700 dark:text-gray-300">Webhook Notifications</label>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Send notifications to webhook endpoints</p>
               </div>
               <input
                 type="checkbox"
                 checked={settings.notifications.webhooksEnabled}
                 onChange={(e) => updateSettings('notifications', 'webhooksEnabled', e.target.checked)}
-                className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                className="h-4 w-4 text-indigo-600 border-gray-300 dark:border-gray-700 rounded"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Email Digest Frequency
               </label>
               <select
                 value={settings.notifications.digestFrequency}
                 onChange={(e) => updateSettings('notifications', 'digestFrequency', e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-md"
+                className="px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md"
               >
                 <option value="immediate">Immediate</option>
                 <option value="hourly">Hourly</option>
@@ -516,10 +516,10 @@ export default function AdminSettingsPage() {
           </CardHeader>
           <CardContent className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Trash Retention Period (days)
               </label>
-              <p className="text-sm text-gray-500 mb-2">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
                 How long to keep deleted documents before permanent deletion
               </p>
               <Input
@@ -533,10 +533,10 @@ export default function AdminSettingsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Version History Retention (days)
               </label>
-              <p className="text-sm text-gray-500 mb-2">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
                 How long to keep document versions
               </p>
               <Input
@@ -550,10 +550,10 @@ export default function AdminSettingsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Audit Log Retention (days)
               </label>
-              <p className="text-sm text-gray-500 mb-2">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
                 How long to keep audit log entries
               </p>
               <Input

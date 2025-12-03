@@ -115,8 +115,8 @@ export default function FoldersPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Folders</h1>
-          <p className="text-gray-500">Organize your documents into folders</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Folders</h1>
+          <p className="text-gray-500 dark:text-gray-400">Organize your documents into folders</p>
         </div>
         <Button onClick={() => setShowCreateForm(true)}>
           <FolderPlus className="h-4 w-4 mr-2" />
@@ -128,7 +128,7 @@ export default function FoldersPage() {
       <div className="flex items-center space-x-2 text-sm">
         <button
           onClick={() => navigateBack(-1)}
-          className={`hover:text-indigo-600 ${currentPath.length === 0 ? 'font-medium text-gray-900' : 'text-gray-500'}`}
+          className={`hover:text-indigo-600 ${currentPath.length === 0 ? 'font-medium text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'}`}
         >
           Root
         </button>
@@ -138,7 +138,7 @@ export default function FoldersPage() {
             <button
               onClick={() => navigateBack(index)}
               className={`hover:text-indigo-600 ${
-                index === currentPath.length - 1 ? 'font-medium text-gray-900' : 'text-gray-500'
+                index === currentPath.length - 1 ? 'font-medium text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'
               }`}
             >
               {item.name}
@@ -156,7 +156,7 @@ export default function FoldersPage() {
           <CardContent>
             <form onSubmit={handleCreateFolder} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Folder Name
                 </label>
                 <Input
@@ -167,7 +167,7 @@ export default function FoldersPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Description (optional)
                 </label>
                 <Input
@@ -200,7 +200,7 @@ export default function FoldersPage() {
           <CardContent className="py-12 text-center">
             <Folder className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium">No folders yet</h3>
-            <p className="text-gray-500 mt-1">Create your first folder to organize documents</p>
+            <p className="text-gray-500 dark:text-gray-400 mt-1">Create your first folder to organize documents</p>
             <Button className="mt-4" onClick={() => setShowCreateForm(true)}>
               <FolderPlus className="h-4 w-4 mr-2" />
               New Folder
@@ -222,11 +222,11 @@ export default function FoldersPage() {
                       <Folder className="h-6 w-6 text-indigo-600" />
                     </div>
                     <div>
-                      <h3 className="font-medium text-gray-900 group-hover:text-indigo-600">
+                      <h3 className="font-medium text-gray-900 dark:text-white group-hover:text-indigo-600">
                         {folder.name}
                       </h3>
                       {folder.description && (
-                        <p className="text-sm text-gray-500 truncate max-w-[150px]">
+                        <p className="text-sm text-gray-500 dark:text-gray-400 truncate max-w-[150px]">
                           {folder.description}
                         </p>
                       )}
@@ -244,7 +244,7 @@ export default function FoldersPage() {
                     <MoreVertical className="h-4 w-4" />
                   </Button>
                 </div>
-                <div className="flex items-center space-x-4 mt-4 text-sm text-gray-500">
+                <div className="flex items-center space-x-4 mt-4 text-sm text-gray-500 dark:text-gray-400">
                   <span className="flex items-center">
                     <FileText className="h-4 w-4 mr-1" />
                     {folder.documentsCount} document{folder.documentsCount !== 1 ? 's' : ''}

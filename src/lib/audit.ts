@@ -1,5 +1,5 @@
 import prisma from './prisma';
-import { AuditAction } from '@prisma/client';
+import { AuditAction } from './types';
 
 interface AuditLogInput {
   action: AuditAction;

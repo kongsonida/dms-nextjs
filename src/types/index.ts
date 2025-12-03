@@ -1,7 +1,29 @@
-import { Role, DocumentStatus, DocumentType, DocumentDirection, ConfidentialLevel, WorkflowStatus, Priority, StepStatus, OcrStatus, ScanStatus } from '@prisma/client';
+import type {
+  Role,
+  DocumentStatus,
+  DocumentType,
+  DocumentDirection,
+  ConfidentialLevel,
+  WorkflowStatus,
+  Priority,
+  StepStatus,
+  OcrStatus,
+  ScanStatus,
+} from '@/lib/types';
 
-// Re-export Prisma types
-export { Role, DocumentStatus, DocumentType, DocumentDirection, ConfidentialLevel, WorkflowStatus, Priority, StepStatus, OcrStatus, ScanStatus };
+// Re-export types
+export type {
+  Role,
+  DocumentStatus,
+  DocumentType,
+  DocumentDirection,
+  ConfidentialLevel,
+  WorkflowStatus,
+  Priority,
+  StepStatus,
+  OcrStatus,
+  ScanStatus,
+};
 
 // User types
 export interface UserSummary {

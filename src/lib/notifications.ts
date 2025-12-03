@@ -1,5 +1,5 @@
 import prisma from './prisma';
-import { NotificationType } from '@prisma/client';
+import { NotificationType } from './types';
 import { sendNotificationEmail } from './email';
 
 interface CreateNotificationInput {

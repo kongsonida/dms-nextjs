@@ -86,7 +86,7 @@ export default function WorkflowsPage() {
       case 'ON_HOLD':
         return <Pause className="h-4 w-4 text-yellow-500" />;
       default:
-        return <GitBranch className="h-4 w-4 text-gray-500" />;
+        return <GitBranch className="h-4 w-4 text-gray-500 dark:text-gray-400" />;
     }
   };
 
@@ -119,8 +119,8 @@ export default function WorkflowsPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Workflows</h1>
-          <p className="text-gray-500">Manage document approval workflows</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Workflows</h1>
+          <p className="text-gray-500 dark:text-gray-400">Manage document approval workflows</p>
         </div>
         <Link href="/workflows/new">
           <Button>
@@ -144,7 +144,7 @@ export default function WorkflowsPage() {
               className={`px-4 py-2 text-sm ${
                 filter === item.key
                   ? 'bg-indigo-600 text-white'
-                  : 'bg-white text-gray-600 hover:bg-gray-50'
+                  : 'bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
               }`}
             >
               {item.label}
@@ -175,7 +175,7 @@ export default function WorkflowsPage() {
           <CardContent className="py-12 text-center">
             <GitBranch className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium">No workflows found</h3>
-            <p className="text-gray-500 mt-1">Create a new workflow to get started</p>
+            <p className="text-gray-500 dark:text-gray-400 mt-1">Create a new workflow to get started</p>
             <Link href="/workflows/new">
               <Button className="mt-4">
                 <Plus className="h-4 w-4 mr-2" />
@@ -199,14 +199,14 @@ export default function WorkflowsPage() {
                       <div>
                         <Link
                           href={`/workflows/${workflow.id}`}
-                          className="text-lg font-medium text-gray-900 hover:text-indigo-600"
+                          className="text-lg font-medium text-gray-900 dark:text-white hover:text-indigo-600"
                         >
                           {workflow.name}
                         </Link>
                         {workflow.description && (
-                          <p className="text-gray-500 mt-1">{workflow.description}</p>
+                          <p className="text-gray-500 dark:text-gray-400 mt-1">{workflow.description}</p>
                         )}
-                        <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
+                        <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500 dark:text-gray-400">
                           <span className="flex items-center">
                             <FileText className="h-4 w-4 mr-1" />
                             <Link href={`/documents/${workflow.document.slug}`} className="hover:text-indigo-600">
@@ -233,12 +233,12 @@ export default function WorkflowsPage() {
                   {/* Progress */}
                   <div className="mt-4">
                     <div className="flex items-center justify-between text-sm mb-2">
-                      <span className="text-gray-500">Progress</span>
+                      <span className="text-gray-500 dark:text-gray-400">Progress</span>
                       <span className="font-medium">
                         {progress.completed} / {progress.total} steps
                       </span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                       <div
                         className="bg-indigo-600 h-2 rounded-full transition-all"
                         style={{ width: `${(progress.completed / progress.total) * 100}%` }}
@@ -261,7 +261,7 @@ export default function WorkflowsPage() {
                               ? 'bg-blue-100 text-blue-600'
                               : step.status === 'REJECTED'
                               ? 'bg-red-100 text-red-600'
-                              : 'bg-gray-100 text-gray-400'
+                              : 'bg-gray-100 dark:bg-gray-800 text-gray-400'
                           }`}
                           title={`${step.name} - ${step.assignedTo.name || step.assignedTo.email}`}
                         >
@@ -276,7 +276,7 @@ export default function WorkflowsPage() {
                         {index < workflow.steps.length - 1 && (
                           <div
                             className={`flex-1 h-0.5 mx-2 ${
-                              step.status === 'COMPLETED' ? 'bg-green-300' : 'bg-gray-200'
+                              step.status === 'COMPLETED' ? 'bg-green-300' : 'bg-gray-200 dark:bg-gray-700'
                             }`}
                           />
                         )}
@@ -300,7 +300,7 @@ export default function WorkflowsPage() {
           >
             Previous
           </Button>
-          <span className="flex items-center px-4 text-sm text-gray-600">
+          <span className="flex items-center px-4 text-sm text-gray-600 dark:text-gray-400">
             Page {page} of {totalPages}
           </span>
           <Button

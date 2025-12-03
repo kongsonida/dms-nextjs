@@ -122,7 +122,7 @@ export default function AuditLogsPage() {
       case 'user':
         return <User className="h-4 w-4 text-green-500" />;
       default:
-        return <Activity className="h-4 w-4 text-gray-500" />;
+        return <Activity className="h-4 w-4 text-gray-500 dark:text-gray-400" />;
     }
   };
 
@@ -137,8 +137,8 @@ export default function AuditLogsPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Audit Logs</h1>
-          <p className="text-gray-500">Monitor all system activities and changes</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Audit Logs</h1>
+          <p className="text-gray-500 dark:text-gray-400">Monitor all system activities and changes</p>
         </div>
         <div className="flex items-center space-x-2">
           <Button variant="outline" onClick={fetchLogs}>
@@ -163,11 +163,11 @@ export default function AuditLogsPage() {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Action</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Action</label>
               <select
                 value={filters.action}
                 onChange={(e) => { setFilters({ ...filters, action: e.target.value }); setPage(1); }}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm"
               >
                 <option value="">All Actions</option>
                 {actions.map((action) => (
@@ -176,11 +176,11 @@ export default function AuditLogsPage() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Entity Type</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Entity Type</label>
               <select
                 value={filters.entityType}
                 onChange={(e) => { setFilters({ ...filters, entityType: e.target.value }); setPage(1); }}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm"
               >
                 <option value="">All Types</option>
                 {entityTypes.map((type) => (
@@ -189,7 +189,7 @@ export default function AuditLogsPage() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">From Date</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">From Date</label>
               <Input
                 type="date"
                 value={filters.dateFrom}
@@ -197,7 +197,7 @@ export default function AuditLogsPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">To Date</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">To Date</label>
               <Input
                 type="date"
                 value={filters.dateTo}
@@ -230,39 +230,39 @@ export default function AuditLogsPage() {
           <CardContent className="py-12 text-center">
             <Activity className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium">No audit logs found</h3>
-            <p className="text-gray-500 mt-1">Try adjusting your filters</p>
+            <p className="text-gray-500 dark:text-gray-400 mt-1">Try adjusting your filters</p>
           </CardContent>
         </Card>
       ) : (
         <Card>
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50 border-b">
+              <thead className="bg-gray-50 dark:bg-gray-800 border-b">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
                     Timestamp
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
                     Action
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
                     Entity
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
                     User
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
                     IP Address
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
                     Details
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
                 {logs.map((log) => (
-                  <tr key={log.id} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">
+                  <tr key={log.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800">
+                    <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap">
                       {formatDate(log.createdAt)}
                     </td>
                     <td className="px-4 py-3">
@@ -271,8 +271,8 @@ export default function AuditLogsPage() {
                     <td className="px-4 py-3">
                       <div className="flex items-center space-x-2">
                         {getEntityIcon(log.entityType)}
-                        <span className="text-sm text-gray-900">{log.entityType}</span>
-                        <span className="text-xs text-gray-500 font-mono">
+                        <span className="text-sm text-gray-900 dark:text-white">{log.entityType}</span>
+                        <span className="text-xs text-gray-500 dark:text-gray-400 font-mono">
                           {log.entityId.substring(0, 8)}...
                         </span>
                       </div>
@@ -280,17 +280,17 @@ export default function AuditLogsPage() {
                     <td className="px-4 py-3">
                       {log.user ? (
                         <div className="text-sm">
-                          <p className="font-medium text-gray-900">{log.user.name || 'Unknown'}</p>
-                          <p className="text-gray-500 text-xs">{log.user.email}</p>
+                          <p className="font-medium text-gray-900 dark:text-white">{log.user.name || 'Unknown'}</p>
+                          <p className="text-gray-500 dark:text-gray-400 text-xs">{log.user.email}</p>
                         </div>
                       ) : (
-                        <span className="text-sm text-gray-500">System</span>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">System</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-500 font-mono">
+                    <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400 font-mono">
                       {log.ipAddress || '-'}
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-500 max-w-xs truncate">
+                    <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400 max-w-xs truncate">
                       {log.details ? JSON.stringify(log.details).substring(0, 50) : '-'}
                     </td>
                   </tr>
@@ -311,7 +311,7 @@ export default function AuditLogsPage() {
           >
             Previous
           </Button>
-          <span className="flex items-center px-4 text-sm text-gray-600">
+          <span className="flex items-center px-4 text-sm text-gray-600 dark:text-gray-400">
             Page {page} of {totalPages}
           </span>
           <Button

@@ -101,7 +101,7 @@ export default function UploadPage() {
               className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
                 dragActive
                   ? 'border-indigo-500 bg-indigo-50'
-                  : 'border-gray-300 hover:border-gray-400'
+                  : 'border-gray-300 dark:border-gray-700 hover:border-gray-400'
               }`}
               onDragEnter={handleDrag}
               onDragLeave={handleDrag}
@@ -112,8 +112,8 @@ export default function UploadPage() {
                 <div className="flex items-center justify-center space-x-4">
                   <FileText className="h-12 w-12 text-indigo-600" />
                   <div className="text-left">
-                    <p className="font-medium text-gray-900">{file.name}</p>
-                    <p className="text-sm text-gray-500">{formatBytes(file.size)}</p>
+                    <p className="font-medium text-gray-900 dark:text-white">{file.name}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{formatBytes(file.size)}</p>
                   </div>
                   <Button
                     type="button"
@@ -127,7 +127,7 @@ export default function UploadPage() {
               ) : (
                 <>
                   <Upload className="h-12 w-12 text-gray-400 mx-auto" />
-                  <p className="mt-4 text-sm text-gray-600">
+                  <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">
                     Drag and drop your file here, or{' '}
                     <label className="text-indigo-600 hover:text-indigo-500 cursor-pointer">
                       browse
@@ -138,7 +138,7 @@ export default function UploadPage() {
                       />
                     </label>
                   </p>
-                  <p className="mt-2 text-xs text-gray-500">
+                  <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
                     PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, TXT, JPG, PNG up to 100MB
                   </p>
                 </>
@@ -147,7 +147,7 @@ export default function UploadPage() {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Title
                 </label>
                 <Input
@@ -158,26 +158,26 @@ export default function UploadPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Description
                 </label>
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Optional description..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
                   rows={3}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Document Type
                 </label>
                 <select
                   value={documentType}
                   onChange={(e) => setDocumentType(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
                 >
                   <option value="GENERAL">General</option>
                   <option value="CONTRACT">Contract</option>

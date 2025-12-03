@@ -147,7 +147,7 @@ export default function NotificationsPage() {
       case 'SECURITY_ALERT':
         return <AlertTriangle className="h-5 w-5 text-red-500" />;
       default:
-        return <Info className="h-5 w-5 text-gray-500" />;
+        return <Info className="h-5 w-5 text-gray-500 dark:text-gray-400" />;
     }
   };
 
@@ -172,8 +172,8 @@ export default function NotificationsPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Notifications</h1>
-          <p className="text-gray-500">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Notifications</h1>
+          <p className="text-gray-500 dark:text-gray-400">
             {unreadCount > 0 ? `${unreadCount} unread notification${unreadCount !== 1 ? 's' : ''}` : 'All caught up!'}
           </p>
         </div>
@@ -201,7 +201,7 @@ export default function NotificationsPage() {
             className={`px-4 py-2 text-sm ${
               filter === 'all'
                 ? 'bg-indigo-600 text-white'
-                : 'bg-white text-gray-600 hover:bg-gray-50'
+                : 'bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
             }`}
           >
             All
@@ -211,7 +211,7 @@ export default function NotificationsPage() {
             className={`px-4 py-2 text-sm ${
               filter === 'unread'
                 ? 'bg-indigo-600 text-white'
-                : 'bg-white text-gray-600 hover:bg-gray-50'
+                : 'bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
             }`}
           >
             Unread
@@ -234,7 +234,7 @@ export default function NotificationsPage() {
           <CardContent className="py-12 text-center">
             <Bell className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium">No notifications</h3>
-            <p className="text-gray-500 mt-1">
+            <p className="text-gray-500 dark:text-gray-400 mt-1">
               {filter === 'unread' ? 'No unread notifications' : 'You have no notifications yet'}
             </p>
           </CardContent>
@@ -242,11 +242,11 @@ export default function NotificationsPage() {
       ) : (
         <Card>
           <CardContent className="p-0">
-            <div className="divide-y">
+            <div className="divide-y divide-gray-200 dark:divide-gray-800">
               {notifications.map((notification) => (
                 <div
                   key={notification.id}
-                  className={`p-4 hover:bg-gray-50 ${!notification.isRead ? 'bg-indigo-50/50' : ''}`}
+                  className={`p-4 hover:bg-gray-50 dark:hover:bg-gray-800 ${!notification.isRead ? 'bg-indigo-50/50' : ''}`}
                 >
                   <div className="flex items-start space-x-4">
                     <div className="flex-shrink-0 mt-1">
@@ -257,24 +257,24 @@ export default function NotificationsPage() {
                         {notification.link ? (
                           <Link
                             href={notification.link}
-                            className="font-medium text-gray-900 hover:text-indigo-600"
+                            className="font-medium text-gray-900 dark:text-white hover:text-indigo-600"
                             onClick={() => !notification.isRead && markAsRead(notification.id)}
                           >
                             {notification.title}
                           </Link>
                         ) : (
-                          <span className="font-medium text-gray-900">{notification.title}</span>
+                          <span className="font-medium text-gray-900 dark:text-white">{notification.title}</span>
                         )}
                         {!notification.isRead && (
                           <span className="h-2 w-2 bg-indigo-600 rounded-full" />
                         )}
                       </div>
-                      <p className="text-gray-600 text-sm mt-1">{notification.message}</p>
+                      <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">{notification.message}</p>
                       <div className="flex items-center space-x-4 mt-2">
                         <Badge variant="secondary" className="text-xs">
                           {getTypeBadge(notification.type)}
                         </Badge>
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
                           {formatDate(notification.createdAt)}
                         </span>
                       </div>
@@ -318,7 +318,7 @@ export default function NotificationsPage() {
           >
             Previous
           </Button>
-          <span className="flex items-center px-4 text-sm text-gray-600">
+          <span className="flex items-center px-4 text-sm text-gray-600 dark:text-gray-400">
             Page {page} of {totalPages}
           </span>
           <Button

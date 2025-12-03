@@ -113,13 +113,13 @@ export default function SharePage() {
 
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = window.document.createElement('a');
       a.href = url;
       a.download = shareData?.document.fileName || 'document';
-      document.body.appendChild(a);
+      window.document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
+      window.document.body.removeChild(a);
     } catch (err) {
       console.error('Download failed:', err);
     } finally {
@@ -162,7 +162,7 @@ export default function SharePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
       </div>
     );
@@ -170,12 +170,12 @@ export default function SharePage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center p-4">
         <Card className="max-w-md w-full">
           <CardContent className="pt-6 text-center">
             <AlertTriangle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-            <h2 className="text-xl font-bold text-gray-900 mb-2">Access Denied</h2>
-            <p className="text-gray-600">{error}</p>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Access Denied</h2>
+            <p className="text-gray-600 dark:text-gray-400">{error}</p>
           </CardContent>
         </Card>
       </div>
@@ -184,14 +184,14 @@ export default function SharePage() {
 
   if (needsPassword) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center p-4">
         <Card className="max-w-md w-full">
           <CardHeader className="text-center">
             <Lock className="h-12 w-12 text-indigo-600 mx-auto mb-4" />
             <CardTitle>Password Required</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-gray-600 text-center mb-6">
+            <p className="text-gray-600 dark:text-gray-400 text-center mb-6">
               This shared document is protected with a password.
             </p>
             <form onSubmit={handlePasswordSubmit} className="space-y-4">
@@ -219,13 +219,13 @@ export default function SharePage() {
   const { document, share } = shareData;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       {/* Header */}
-      <div className="bg-white border-b">
+      <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Shield className="h-6 w-6 text-indigo-600" />
-            <span className="font-semibold text-gray-900">Secure Document Sharing</span>
+            <span className="font-semibold text-gray-900 dark:text-white">Secure Document Sharing</span>
           </div>
           <Badge variant="secondary">
             <Eye className="h-3 w-3 mr-1" />
@@ -242,12 +242,12 @@ export default function SharePage() {
             <div className="flex items-start space-x-6">
               <div className="text-5xl">{getFileIcon(document.mimeType)}</div>
               <div className="flex-1">
-                <h1 className="text-2xl font-bold text-gray-900">{document.title}</h1>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{document.title}</h1>
                 {document.description && (
-                  <p className="text-gray-600 mt-2">{document.description}</p>
+                  <p className="text-gray-600 dark:text-gray-400 mt-2">{document.description}</p>
                 )}
 
-                <div className="flex flex-wrap items-center gap-4 mt-4 text-sm text-gray-500">
+                <div className="flex flex-wrap items-center gap-4 mt-4 text-sm text-gray-500 dark:text-gray-400">
                   <span className="flex items-center">
                     <FileText className="h-4 w-4 mr-1" />
                     {document.fileName}
@@ -256,7 +256,7 @@ export default function SharePage() {
                   <Badge variant="outline">{document.documentType}</Badge>
                 </div>
 
-                <div className="flex items-center space-x-4 mt-4 text-sm text-gray-500">
+                <div className="flex items-center space-x-4 mt-4 text-sm text-gray-500 dark:text-gray-400">
                   <span className="flex items-center">
                     <User className="h-4 w-4 mr-1" />
                     Shared by {document.owner.name || document.owner.email}
@@ -264,11 +264,11 @@ export default function SharePage() {
                 </div>
 
                 {/* Share Details */}
-                <div className="mt-6 p-4 bg-gray-50 rounded-lg space-y-2">
+                <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg space-y-2">
                   {share.expiresAt && (
                     <div className="flex items-center text-sm">
                       <Clock className="h-4 w-4 mr-2 text-gray-400" />
-                      <span className="text-gray-600">
+                      <span className="text-gray-600 dark:text-gray-400">
                         Expires: {formatDate(share.expiresAt)}
                       </span>
                     </div>
@@ -276,14 +276,14 @@ export default function SharePage() {
                   {share.maxAccessCount && (
                     <div className="flex items-center text-sm">
                       <Eye className="h-4 w-4 mr-2 text-gray-400" />
-                      <span className="text-gray-600">
+                      <span className="text-gray-600 dark:text-gray-400">
                         {share.maxAccessCount - share.accessCount} views remaining
                       </span>
                     </div>
                   )}
                   <div className="flex items-center text-sm">
                     <Download className="h-4 w-4 mr-2 text-gray-400" />
-                    <span className="text-gray-600">
+                    <span className="text-gray-600 dark:text-gray-400">
                       Download: {share.allowDownload ? 'Enabled' : 'Disabled'}
                     </span>
                   </div>
@@ -308,8 +308,8 @@ export default function SharePage() {
             {/* Preview Area (for supported file types) */}
             {document.mimeType === 'application/pdf' && (
               <div className="mt-8">
-                <h3 className="font-medium text-gray-900 mb-4">Preview</h3>
-                <div className="border rounded-lg overflow-hidden bg-gray-100 h-[600px]">
+                <h3 className="font-medium text-gray-900 dark:text-white mb-4">Preview</h3>
+                <div className="border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 h-[600px]">
                   <iframe
                     src={`/api/share/${token}/preview`}
                     className="w-full h-full"
@@ -321,8 +321,8 @@ export default function SharePage() {
 
             {document.mimeType.startsWith('image/') && (
               <div className="mt-8">
-                <h3 className="font-medium text-gray-900 mb-4">Preview</h3>
-                <div className="border rounded-lg overflow-hidden bg-gray-100">
+                <h3 className="font-medium text-gray-900 dark:text-white mb-4">Preview</h3>
+                <div className="border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
                   <img
                     src={`/api/share/${token}/preview`}
                     alt={document.title}
@@ -335,7 +335,7 @@ export default function SharePage() {
         </Card>
 
         {/* Security Notice */}
-        <div className="mt-6 text-center text-sm text-gray-500">
+        <div className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
           <p>
             This document was shared securely. Do not share this link with unauthorized individuals.
           </p>

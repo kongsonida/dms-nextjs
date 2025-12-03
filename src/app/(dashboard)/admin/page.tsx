@@ -137,8 +137,8 @@ export default function AdminDashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-        <p className="text-gray-500">System overview and statistics</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Admin Dashboard</h1>
+        <p className="text-gray-500 dark:text-gray-400">System overview and statistics</p>
       </div>
 
       {/* Stats Cards */}
@@ -147,8 +147,8 @@ export default function AdminDashboard() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Total Users</p>
-                <p className="text-3xl font-bold text-gray-900">{displayStats.users.total}</p>
+                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Users</p>
+                <p className="text-3xl font-bold text-gray-900 dark:text-white">{displayStats.users.total}</p>
                 <p className="text-sm text-green-600 flex items-center mt-1">
                   <TrendingUp className="h-4 w-4 mr-1" />
                   +{displayStats.users.newThisMonth} this month
@@ -165,9 +165,9 @@ export default function AdminDashboard() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Total Documents</p>
-                <p className="text-3xl font-bold text-gray-900">{displayStats.documents.total}</p>
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Documents</p>
+                <p className="text-3xl font-bold text-gray-900 dark:text-white">{displayStats.documents.total}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                   {displayStats.documents.pendingReview} pending review
                 </p>
               </div>
@@ -182,11 +182,11 @@ export default function AdminDashboard() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Storage Used</p>
-                <p className="text-3xl font-bold text-gray-900">
+                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Storage Used</p>
+                <p className="text-3xl font-bold text-gray-900 dark:text-white">
                   {displayStats.storage.percentage.toFixed(1)}%
                 </p>
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                   {formatBytes(displayStats.storage.used)} / {formatBytes(displayStats.storage.total)}
                 </p>
               </div>
@@ -201,9 +201,9 @@ export default function AdminDashboard() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Today's Activity</p>
-                <p className="text-3xl font-bold text-gray-900">{displayStats.activity.todayActions}</p>
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Today's Activity</p>
+                <p className="text-3xl font-bold text-gray-900 dark:text-white">{displayStats.activity.todayActions}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                   {displayStats.activity.weekActions} this week
                 </p>
               </div>
@@ -226,35 +226,35 @@ export default function AdminDashboard() {
             <div className="grid grid-cols-2 gap-4">
               <Link
                 href="/admin/users"
-                className="p-4 border rounded-lg hover:bg-gray-50 transition-colors"
+                className="p-4 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
               >
                 <Users className="h-8 w-8 text-indigo-600 mb-2" />
                 <h4 className="font-medium">Manage Users</h4>
-                <p className="text-sm text-gray-500">Add, edit, or remove users</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Add, edit, or remove users</p>
               </Link>
               <Link
                 href="/admin/settings"
-                className="p-4 border rounded-lg hover:bg-gray-50 transition-colors"
+                className="p-4 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
               >
                 <CheckCircle className="h-8 w-8 text-green-600 mb-2" />
                 <h4 className="font-medium">System Settings</h4>
-                <p className="text-sm text-gray-500">Configure system options</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Configure system options</p>
               </Link>
               <Link
                 href="/admin/audit"
-                className="p-4 border rounded-lg hover:bg-gray-50 transition-colors"
+                className="p-4 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
               >
                 <Activity className="h-8 w-8 text-purple-600 mb-2" />
                 <h4 className="font-medium">View Audit Logs</h4>
-                <p className="text-sm text-gray-500">Monitor system activity</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Monitor system activity</p>
               </Link>
               <Link
                 href="/admin/storage"
-                className="p-4 border rounded-lg hover:bg-gray-50 transition-colors"
+                className="p-4 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
               >
                 <HardDrive className="h-8 w-8 text-yellow-600 mb-2" />
                 <h4 className="font-medium">Storage Manager</h4>
-                <p className="text-sm text-gray-500">Manage storage quotas</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Manage storage quotas</p>
               </Link>
             </div>
           </CardContent>
@@ -270,7 +270,7 @@ export default function AdminDashboard() {
           </CardHeader>
           <CardContent>
             {recentActivity.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
+              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                 <Clock className="h-8 w-8 mx-auto mb-2 text-gray-400" />
                 <p>No recent activity</p>
               </div>
@@ -281,15 +281,15 @@ export default function AdminDashboard() {
                     <div className="flex items-center space-x-3">
                       {getActionBadge(activity.action)}
                       <div>
-                        <p className="text-sm font-medium text-gray-900">
+                        <p className="text-sm font-medium text-gray-900 dark:text-white">
                           {activity.userName || 'System'}
                         </p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
                           {activity.entityType}
                         </p>
                       </div>
                     </div>
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
                       {formatDate(activity.createdAt)}
                     </span>
                   </div>

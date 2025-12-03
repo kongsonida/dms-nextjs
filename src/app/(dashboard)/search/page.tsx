@@ -126,8 +126,8 @@ export default function SearchPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Search Documents</h1>
-        <p className="text-gray-500">Search through all your documents and files</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Search Documents</h1>
+        <p className="text-gray-500 dark:text-gray-400">Search through all your documents and files</p>
       </div>
 
       {/* Search Form */}
@@ -175,13 +175,13 @@ export default function SearchPage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Document Type
                 </label>
                 <select
                   value={selectedType}
                   onChange={(e) => setSelectedType(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md"
                 >
                   <option value="">All Types</option>
                   <option value="GENERAL">General</option>
@@ -196,13 +196,13 @@ export default function SearchPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Status
                 </label>
                 <select
                   value={selectedStatus}
                   onChange={(e) => setSelectedStatus(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md"
                 >
                   <option value="">All Statuses</option>
                   <option value="DRAFT">Draft</option>
@@ -239,12 +239,12 @@ export default function SearchPage() {
                       <button
                         key={type}
                         onClick={() => { setSelectedType(type); setPage(1); performSearch(); }}
-                        className={`flex items-center justify-between w-full px-2 py-1 rounded text-sm hover:bg-gray-100 ${
+                        className={`flex items-center justify-between w-full px-2 py-1 rounded text-sm hover:bg-gray-100 dark:hover:bg-gray-700 ${
                           selectedType === type ? 'bg-indigo-50 text-indigo-700' : ''
                         }`}
                       >
                         <span>{type}</span>
-                        <span className="text-gray-500">{count}</span>
+                        <span className="text-gray-500 dark:text-gray-400">{count}</span>
                       </button>
                     ))}
                   </div>
@@ -261,12 +261,12 @@ export default function SearchPage() {
                       <button
                         key={status}
                         onClick={() => { setSelectedStatus(status); setPage(1); performSearch(); }}
-                        className={`flex items-center justify-between w-full px-2 py-1 rounded text-sm hover:bg-gray-100 ${
+                        className={`flex items-center justify-between w-full px-2 py-1 rounded text-sm hover:bg-gray-100 dark:hover:bg-gray-700 ${
                           selectedStatus === status ? 'bg-indigo-50 text-indigo-700' : ''
                         }`}
                       >
                         <span>{status.replace('_', ' ')}</span>
-                        <span className="text-gray-500">{count}</span>
+                        <span className="text-gray-500 dark:text-gray-400">{count}</span>
                       </button>
                     ))}
                   </div>
@@ -287,14 +287,14 @@ export default function SearchPage() {
               <CardContent className="py-12 text-center">
                 <Search className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-medium">No results found</h3>
-                <p className="text-gray-500 mt-1">
+                <p className="text-gray-500 dark:text-gray-400 mt-1">
                   Try adjusting your search or filters
                 </p>
               </CardContent>
             </Card>
           ) : (
             <>
-              <div className="mb-4 text-sm text-gray-500">
+              <div className="mb-4 text-sm text-gray-500 dark:text-gray-400">
                 Found {total} result{total !== 1 ? 's' : ''}
               </div>
               <div className="space-y-4">
@@ -310,11 +310,11 @@ export default function SearchPage() {
                             {result.title}
                           </Link>
                           {result.description && (
-                            <p className="text-gray-600 mt-1 line-clamp-2">
+                            <p className="text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">
                               {result.description}
                             </p>
                           )}
-                          <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
+                          <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500 dark:text-gray-400">
                             <span className="flex items-center">
                               <FileText className="h-4 w-4 mr-1" />
                               {result.fileName}
@@ -355,7 +355,7 @@ export default function SearchPage() {
                   >
                     Previous
                   </Button>
-                  <span className="flex items-center px-4 text-sm text-gray-600">
+                  <span className="flex items-center px-4 text-sm text-gray-600 dark:text-gray-400">
                     Page {page} of {totalPages}
                   </span>
                   <Button
