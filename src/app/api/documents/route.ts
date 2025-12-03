@@ -361,8 +361,9 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     console.error('Upload document error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to upload document';
     return NextResponse.json(
-      { success: false, error: 'Failed to upload document' },
+      { success: false, error: errorMessage },
       { status: 500 }
     );
   }
