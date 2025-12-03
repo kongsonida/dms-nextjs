@@ -178,33 +178,30 @@ export async function POST(request: NextRequest) {
       // Ignore parse errors
     }
 
-    // Helper to convert null/empty to undefined
+    // Helper to get form value, returns undefined for null/empty
     const getFormValue = (key: string): string | undefined => {
       const value = formData.get(key);
-      if (value === null || value === '') return undefined;
+      if (!value || value === '') return undefined;
       return String(value);
     };
 
-    // Validate document data - convert null to undefined for optional fields
-    const documentData = {
-      title: getFormValue('title') || file.name,
-      description: getFormValue('description'),
-      documentNumber: getFormValue('documentNumber'),
-      documentType: getFormValue('documentType'),
-      direction: getFormValue('direction'),
-      confidentiality: getFormValue('confidentiality'),
-      folderId: getFormValue('folderId'),
-      tags: formData.getAll('tags').filter(t => t) as string[],
-      metadata: Object.keys(metadata).length > 0 ? metadata : undefined,
-    };
-
-    const validation = validate(createDocumentSchema, documentData);
-    if (!validation.success) {
+    // Get title - required field
+    const title = getFormValue('title') || file.name;
+    if (!title || title.length > 255) {
       return NextResponse.json(
-        { success: false, errors: validation.errors },
+        { success: false, error: 'Title is required and must be less than 255 characters' },
         { status: 400 }
       );
     }
+
+    // Get optional fields with proper defaults
+    const description = getFormValue('description');
+    const documentNumber = getFormValue('documentNumber');
+    const documentType = getFormValue('documentType') || 'GENERAL';
+    const direction = getFormValue('direction') || 'INTERNAL';
+    const confidentiality = getFormValue('confidentiality') || 'INTERNAL';
+    const folderId = getFormValue('folderId');
+    const tags = formData.getAll('tags').filter(t => t) as string[];
 
     // Check storage quota
     const user = await prisma.user.findUnique({
@@ -226,25 +223,25 @@ export async function POST(request: NextRequest) {
     });
 
     // Create document
-    const slug = generateUniqueSlug(documentData.title);
+    const slug = generateUniqueSlug(title);
 
     const document = await prisma.document.create({
       data: {
-        title: documentData.title,
+        title,
         slug,
-        description: documentData.description,
+        description,
         fileName: storedFile.fileName,
         originalName: storedFile.originalName,
         mimeType: storedFile.mimeType,
         fileSize: BigInt(storedFile.fileSize),
         filePath: storedFile.filePath,
         fileHash: storedFile.fileHash,
-        documentNumber: documentData.documentNumber,
-        documentType: (documentData.documentType as any) || 'GENERAL',
-        direction: (documentData.direction as any) || 'INTERNAL',
-        confidentiality: (documentData.confidentiality as any) || 'INTERNAL',
+        documentNumber,
+        documentType: documentType as any,
+        direction: direction as any,
+        confidentiality: confidentiality as any,
         ownerId: session.user.id,
-        folderId: documentData.folderId || null,
+        folderId: folderId || null,
       },
       include: {
         owner: {
@@ -254,8 +251,8 @@ export async function POST(request: NextRequest) {
     });
 
     // Create tags
-    if (documentData.tags && documentData.tags.length > 0) {
-      for (const tagId of documentData.tags) {
+    if (tags && tags.length > 0) {
+      for (const tagId of tags) {
         await prisma.documentTag.create({
           data: {
             documentId: document.id,
@@ -268,8 +265,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Create metadata entries
-    if (documentData.metadata && Object.keys(documentData.metadata).length > 0) {
-      for (const [key, value] of Object.entries(documentData.metadata)) {
+    if (metadata && Object.keys(metadata).length > 0) {
+      for (const [key, value] of Object.entries(metadata)) {
         await prisma.documentMetadata.create({
           data: {
             documentId: document.id,
