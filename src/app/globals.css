@@ -1,5 +1,9 @@
 @import 'tailwindcss';
 
+/* Configure dark mode to use class strategy */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Import Khmer fonts */
 @import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@100..700&display=swap');
 
 @theme {
