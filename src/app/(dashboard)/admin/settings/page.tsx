@@ -76,51 +76,62 @@ export default function AdminSettingsPage() {
     fetchServiceStatus();
   }, []);
 
+  const defaultSettings: SystemSettings = {
+    storage: {
+      maxFileSize: 100,
+      allowedTypes: ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'jpg', 'png'],
+      storageQuota: 10240,
+      usedStorage: 0,
+    },
+    security: {
+      passwordMinLength: 8,
+      requireUppercase: true,
+      requireNumbers: true,
+      requireSpecialChars: false,
+      sessionTimeout: 30,
+      maxLoginAttempts: 5,
+    },
+    retention: {
+      trashRetentionDays: 30,
+      versionRetentionDays: 365,
+      auditLogRetentionDays: 90,
+    },
+    notifications: {
+      emailEnabled: true,
+      webhooksEnabled: false,
+      digestFrequency: 'daily',
+    },
+    ocr: {
+      enabled: true,
+      languages: ['eng'],
+    },
+    virusScan: {
+      enabled: true,
+      scanOnUpload: true,
+    },
+  };
+
   const fetchSettings = async () => {
     setLoading(true);
     try {
       const response = await fetch('/api/settings');
       const data = await response.json();
-      if (data.success) {
-        setSettings(data.data);
+      if (data.success && data.data) {
+        // Merge with defaults to ensure all properties exist
+        setSettings({
+          storage: { ...defaultSettings.storage, ...data.data.storage },
+          security: { ...defaultSettings.security, ...data.data.security },
+          retention: { ...defaultSettings.retention, ...data.data.retention },
+          notifications: { ...defaultSettings.notifications, ...data.data.notifications },
+          ocr: { ...defaultSettings.ocr, ...data.data.ocr },
+          virusScan: { ...defaultSettings.virusScan, ...data.data.virusScan },
+        });
+      } else {
+        setSettings(defaultSettings);
       }
     } catch (error) {
       console.error('Failed to fetch settings:', error);
-      // Set default settings if fetch fails
-      setSettings({
-        storage: {
-          maxFileSize: 100,
-          allowedTypes: ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'jpg', 'png'],
-          storageQuota: 10240,
-          usedStorage: 0,
-        },
-        security: {
-          passwordMinLength: 8,
-          requireUppercase: true,
-          requireNumbers: true,
-          requireSpecialChars: false,
-          sessionTimeout: 30,
-          maxLoginAttempts: 5,
-        },
-        retention: {
-          trashRetentionDays: 30,
-          versionRetentionDays: 365,
-          auditLogRetentionDays: 90,
-        },
-        notifications: {
-          emailEnabled: true,
-          webhooksEnabled: false,
-          digestFrequency: 'daily',
-        },
-        ocr: {
-          enabled: true,
-          languages: ['eng'],
-        },
-        virusScan: {
-          enabled: true,
-          scanOnUpload: true,
-        },
-      });
+      setSettings(defaultSettings);
     } finally {
       setLoading(false);
     }
