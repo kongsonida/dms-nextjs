@@ -121,7 +121,7 @@ export async function POST(
     // Return file for download
     const fileBuffer = await getFile(document.filePath);
 
-    return new NextResponse(fileBuffer, {
+    return new NextResponse(new Uint8Array(fileBuffer), {
       headers: {
         'Content-Type': document.mimeType,
         'Content-Disposition': `attachment; filename="${document.originalName}"`,

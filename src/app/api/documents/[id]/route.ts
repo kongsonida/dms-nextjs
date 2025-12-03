@@ -127,12 +127,12 @@ export async function GET(
         retentionDate: document.retentionDate,
         owner: document.owner,
         folder: document.folder,
-        tags: document.tags.map((t) => t.tag),
+        tags: document.tags.map((t: typeof document.tags[number]) => t.tag),
         metadata: document.metadata.reduce(
-          (acc, m) => ({ ...acc, [m.key]: m.value }),
+          (acc: Record<string, string>, m: typeof document.metadata[number]) => ({ ...acc, [m.key]: m.value }),
           {}
         ),
-        versions: document.versions.map((v) => ({
+        versions: document.versions.map((v: typeof document.versions[number]) => ({
           id: v.id,
           version: v.version,
           fileName: v.fileName,
@@ -277,7 +277,7 @@ export async function PATCH(
       });
 
       // Add new metadata
-      for (const [key, value] of Object.entries(metadata)) {
+      for (const [key, value] of Object.entries(metadata as Record<string, string>)) {
         await prisma.documentMetadata.create({
           data: {
             documentId: id,

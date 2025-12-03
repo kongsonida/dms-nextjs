@@ -85,7 +85,7 @@ export async function GET(
     logDocumentDownloaded(document.id, session.user.id);
 
     // Return file
-    return new NextResponse(fileBuffer, {
+    return new NextResponse(new Uint8Array(fileBuffer), {
       headers: {
         'Content-Type': document.mimeType,
         'Content-Disposition': `attachment; filename="${fileName}"`,

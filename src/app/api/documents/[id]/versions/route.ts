@@ -65,7 +65,7 @@ export async function GET(
 
     return NextResponse.json({
       success: true,
-      data: versions.map((v) => ({
+      data: versions.map((v: typeof versions[number]) => ({
         id: v.id,
         version: v.version,
         fileName: v.fileName,

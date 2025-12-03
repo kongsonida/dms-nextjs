@@ -48,7 +48,7 @@ export const createDocumentSchema = z.object({
   confidentiality: z.enum(['PUBLIC', 'INTERNAL', 'CONFIDENTIAL', 'RESTRICTED']).optional(),
   folderId: z.string().optional(),
   tags: z.array(z.string()).optional(),
-  metadata: z.record(z.string()).optional(),
+  metadata: z.record(z.string(), z.string()).optional(),
 });
 
 export const updateDocumentSchema = z.object({
@@ -76,7 +76,7 @@ export const updateDocumentSchema = z.object({
     .optional(),
   folderId: z.string().nullable().optional(),
   tags: z.array(z.string()).optional(),
-  metadata: z.record(z.string()).optional(),
+  metadata: z.record(z.string(), z.string()).optional(),
 });
 
 // Folder schemas
@@ -210,7 +210,7 @@ export function validate<T>(schema: z.ZodSchema<T>, data: unknown): { success: b
     if (error instanceof z.ZodError) {
       return {
         success: false,
-        errors: error.errors.map((e) => `${e.path.join('.')}: ${e.message}`),
+        errors: error.issues.map((e) => `${e.path.join('.')}: ${e.message}`),
       };
     }
     return { success: false, errors: ['Validation failed'] };

@@ -21,7 +21,7 @@ export async function createAuditLog(input: AuditLogInput): Promise<void> {
         entityId: input.entityId,
         userId: input.userId,
         documentId: input.documentId,
-        details: input.details,
+        details: input.details as object | undefined,
         ipAddress: input.ipAddress,
         userAgent: input.userAgent,
       },

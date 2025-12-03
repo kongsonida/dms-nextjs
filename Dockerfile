@@ -4,7 +4,7 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Install dependencies for native modules
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat openssl
 
 # Copy package files
 COPY package*.json ./
@@ -27,8 +27,8 @@ FROM node:20-alpine AS runner
 
 WORKDIR /app
 
-# Install production dependencies
-RUN apk add --no-cache libc6-compat tesseract-ocr tesseract-ocr-data-eng
+# Install production dependencies and OpenSSL for Prisma
+RUN apk add --no-cache libc6-compat tesseract-ocr tesseract-ocr-data-eng openssl
 
 # Create non-root user
 RUN addgroup --system --gid 1001 nodejs
@@ -39,7 +39,11 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/package-lock.json ./package-lock.json
+
+# Install production dependencies and regenerate Prisma client for the runner environment
+RUN npm ci --only=production && npx prisma generate
 
 # Create upload directory
 RUN mkdir -p /data/uploads && chown -R nextjs:nodejs /data

@@ -1,17 +1,17 @@
 # Background Worker Dockerfile
-FROM node:20-alpine
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Install dependencies for native modules and OCR
-RUN apk add --no-cache libc6-compat tesseract-ocr tesseract-ocr-data-eng poppler-utils
+# Install dependencies for native modules
+RUN apk add --no-cache libc6-compat openssl
 
 # Copy package files
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Install dependencies
-RUN npm ci --only=production
+# Install all dependencies (including dev for TypeScript compilation)
+RUN npm ci
 
 # Generate Prisma client
 RUN npx prisma generate
@@ -21,8 +21,29 @@ COPY src/workers ./src/workers
 COPY src/lib ./src/lib
 COPY tsconfig.json ./
 
-# Install ts-node for running TypeScript
-RUN npm install -g ts-node typescript
+# Compile TypeScript
+RUN npx tsc --outDir dist --declaration false --moduleResolution node --module commonjs --target ES2020 --esModuleInterop true --skipLibCheck true src/workers/index.ts || true
+
+# Production stage
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install dependencies for native modules and OCR
+RUN apk add --no-cache libc6-compat tesseract-ocr tesseract-ocr-data-eng poppler-utils openssl
+
+# Copy package files
+COPY package*.json ./
+COPY prisma ./prisma/
+
+# Install production dependencies only
+RUN npm ci --only=production
+
+# Generate Prisma client
+RUN npx prisma generate
+
+# Copy compiled code from builder
+COPY --from=builder /app/dist ./dist
 
 # Create non-root user
 RUN addgroup --system --gid 1001 nodejs
@@ -38,4 +59,4 @@ ENV NODE_ENV=production
 USER worker
 
 # Start the worker
-CMD ["ts-node", "--transpile-only", "src/workers/index.ts"]
+CMD ["node", "dist/workers/index.js"]

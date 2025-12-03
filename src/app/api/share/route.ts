@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions, canShareDocuments } from '@/lib/auth';
+import { authOptions, canShareDocuments, hashPassword } from '@/lib/auth';
 import prisma from '@/lib/prisma';
 import { createShareLinkSchema, validate } from '@/lib/validation';
-import { generateToken, hashPassword } from '@/lib/utils';
+import { generateToken } from '@/lib/utils';
 import { logDocumentShared } from '@/lib/audit';
 import { onDocumentShared } from '@/lib/webhooks';
 
@@ -114,7 +114,7 @@ export async function POST(request: NextRequest) {
     const token = generateToken(32);
 
     // Hash password if provided
-    let hashedPassword = null;
+    let hashedPassword: string | null = null;
     if (password) {
       const bcrypt = await import('bcryptjs');
       hashedPassword = await bcrypt.hash(password, 10);

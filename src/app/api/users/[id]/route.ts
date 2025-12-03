@@ -44,7 +44,7 @@ export async function GET(
         _count: {
           select: {
             documents: true,
-            workflows: true,
+            createdWorkflows: true,
             assignedWorkflows: true,
           },
         },
@@ -70,7 +70,7 @@ export async function GET(
         storageQuota: user.storageQuota.toString(),
         storageUsed: user.storageUsed.toString(),
         documentsCount: user._count.documents,
-        workflowsCreated: user._count.workflows,
+        workflowsCreated: user._count.createdWorkflows,
         workflowsAssigned: user._count.assignedWorkflows,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,

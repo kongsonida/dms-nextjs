@@ -113,7 +113,7 @@ export async function GET(
       // Return file
       const fileBuffer = await getFile(share.document.filePath);
 
-      return new NextResponse(fileBuffer, {
+      return new NextResponse(new Uint8Array(fileBuffer), {
         headers: {
           'Content-Type': share.document.mimeType,
           'Content-Disposition': `attachment; filename="${share.document.originalName}"`,

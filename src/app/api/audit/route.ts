@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      data: logs.map((log) => ({
+      data: logs.map((log: typeof logs[number]) => ({
         id: log.id,
         action: log.action,
         entityType: log.entityType,

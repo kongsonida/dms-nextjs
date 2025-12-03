@@ -99,7 +99,7 @@ export async function deliverWebhook(
       data: {
         webhookId,
         event,
-        payload,
+        payload: payload as object,
         response: responseText.substring(0, 1000), // Truncate long responses
         statusCode: response.status,
         success: response.ok,
@@ -118,7 +118,7 @@ export async function deliverWebhook(
       data: {
         webhookId,
         event,
-        payload,
+        payload: payload as object,
         success: false,
         error: errorMessage,
       },
